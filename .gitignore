@@ -2,4 +2,4 @@ snowplow-kinesis-enrich-*
 snowplow-stream-collector-*
 sp.js
 GeoLiteCity.dat
-data
+events.tsv

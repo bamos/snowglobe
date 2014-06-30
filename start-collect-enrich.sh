@@ -8,4 +8,4 @@ JAVA_VER=$(java -version 2>&1 | \
   sed 's/java version "\(.*\)\.\(.*\)\..*"/\1\2/; 1q')
 [ "$JAVA_VER" -gt 16 ] || die "Java version must be greater than 1.6."
 
-./$COL --config collector.conf | ./$ENR --config enrich.conf | ./event-storage.py
+./$COL --config collector.conf | ./$ENR --config enrich.conf >> events.tsv
