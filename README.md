@@ -14,7 +14,7 @@ as a tab separated file at `events.tsv`.
 the Snowplow event data.
 
 ## Prerequisites, installing, and configuring.
-1. Install the wget, sbt, scala, and the JRE (>= 1.7).
+1. Install wget, Python, sbt, scala, and the JRE (&ge; 1.7).
 2. Ensure `JAVA_HOME` in `env.sh` contains a Java distribution
    version 1.7 or above.
 2. Run `./bootstrap.sh` to download Snowplow and GeoLite binaries.
