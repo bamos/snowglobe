@@ -33,7 +33,6 @@ session, or run by an init daemon.
   Scala enricher.
   The enricher will output [Snowplow canonical output][canonical-output]
   as rows in `events.tsv`.
-+ TODO: Partition events.tsv into a year/month/day directory structure.
 
 ## Adding JavaScript tags.
 Next, ensure that the collector and enricher are properly configured
@@ -88,8 +87,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-[snowplow]: TODO
-[js-tracker]: TODO
-[scala-enrichment]: TODO
-[events-formatting]: TODO
-[spark]: TODO
+[snowplow]: https://github.com/snowplow/snowplow
+[js-tracker]: https://github.com/snowplow/snowplow-javascript-tracker
+[scala-enrichment]: https://github.com/snowplow/snowplow/tree/master/3-enrich/scala-kinesis-enrich
+[canonical-output]: https://github.com/snowplow/snowplow/wiki/canonical-event-model
+[spark]: http://spark.apache.org/
