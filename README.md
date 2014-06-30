@@ -1,11 +1,11 @@
 # SnowGlobe
 __Small-scale web analytics for self-hosting and hacking
-with Snowplow, Scala, Spark, Spray, Twirl, and d3.js__
+with Snowplow, Spark, Spray, Twirl, and d3.js.__
 
 SnowGlobe ties together components from the [Snowplow][snowplow]
 analytics framework for simple pageview analytics and requires
 minimal configuration.
-The [Javascript tracker][js-tracker] is used with the
+The [JavaScript tracker][js-tracker] is used with the
 [Scala collector][scala-collector] and [Scala enrichment][scala-enrichment]
 to output [Snowplow canonical output][canonical-output] for the pageviews
 as a tab separated file at `events.tsv`.
@@ -35,21 +35,21 @@ session, or run by an init daemon.
   as rows in `events.tsv`.
 + TODO: Partition events.tsv into a year/month/day directory structure.
 
-## Adding Javascript tags.
+## Adding JavaScript tags.
 Next, ensure that the collector and enricher are properly configured
 and started by running `lynx index.html` on the server.
 `events.tsv` should now contain the tab separated event.
 
 Next, copy and paste the following code to your webpage's
 templates to send events on the pages you wish to track,
-and add Snowplow's Javascript library `sp.js` to your website's
+and add Snowplow's JavaScript library `sp.js` to your website's
 resource directory.
 Make sure to change `localhost:8080` to your server and port,
 and ensure the port is open.
 
-```
-<script src="sp.js" type='text/javascript'></script>
-<script type="text/javascript">
+```JavaScript
+<script src="sp.js" type='text/JavaScript'></script>
+<script type="text/JavaScript">
 try {
   // Use localhost as the server for testing on the same computer,
   // but change to your deployed server IP address or hostname
