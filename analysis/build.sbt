@@ -1,9 +1,3 @@
-import AssemblyKeys._
-
-assemblySettings
-
-jarName in assembly := "snowglobe-analysis.jar"
-
 name := "SnowGlobe Analysis"
 
 version := "1.0"
