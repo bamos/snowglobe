@@ -39,23 +39,19 @@ body {
       </div>
       <div class="collapse navbar-collapse">
         <ul class="nav navbar-nav">
-          <!-- class="active" -->
-          @if(pageName == "index") {
-            <li class="active"><a href="/">Home</a></li>
-          } else {
-            <li><a href="/">Home</a></li>
-          }
-          @if(pageName == "pageviews") {
-            <li class="active"><a href="/pageviews">PageViews</a></li>
-          } else {
-            <li><a href="/pageviews">PageViews</a></li>
-          }
+          <li @if(pageName == "index") { class="active" } >
+            <a href="/">Home</a>
+          </li>
+          <li @if(pageName == "headers") { class="active" } >
+            <a href="/headers">Headers</a>
+          </li>
+          <li @if(pageName == "visitors") { class="active" } >
+            <a href="/visitors">Visitors</a>
+          </li>
           <li><a href="https://github.com/bamos/snowglobe">GitHub</a></li>
-          @if(pageName == "about") {
-            <li class="active"><a href="/about">About</a></li>
-          } else {
-            <li><a href="/about">About</a></li>
-          }
+          <li @if(pageName == "about") { class="active" } >
+            <a href="/about">About</a>
+          </li>
         </ul>
       </div>
     </div>

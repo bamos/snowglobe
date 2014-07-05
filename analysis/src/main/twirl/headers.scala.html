@@ -1,0 +1,14 @@
+@(headers: Seq[String])
+
+@base("headers") {
+  <div class="container">
+    <div class="hero-unit">
+      <h1>Headers</h1>
+      <ul>
+        @for(header<-headers) {
+          <li>@header</li>
+        }
+      </ul>
+    </div>
+  </div>
+}

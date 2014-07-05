@@ -41,8 +41,7 @@ class SnowGlobeService(context: ActorRefFactory) extends HttpService {
       path("index") {
         respondWithMediaType(`text/html`) {
           complete{
-            // val unzippedMap = QueryMeta.info.unzip
-            html.index(Seq("a", "b")).toString
+            html.index().toString
           }
         }
       }~
@@ -52,10 +51,19 @@ class SnowGlobeService(context: ActorRefFactory) extends HttpService {
       path(Rest) { path =>
         getFromResource("bootstrap/%s" format path)
       }~
-      path("pageviews") {
+      path("visitors") {
+        parameters('csvCols ? "dvce_tstamp,page_urlpath") { (csvCols) =>
+          respondWithMediaType(`text/html`) {
+            complete(
+              QueryHandler.visitors(csvCols.split(","))
+            )
+          }
+        }
+      }~
+      path("headers") {
         respondWithMediaType(`text/html`) {
           complete(
-            QueryHandler.pageviews()
+            html.headers(Helper.headers).toString
           )
         }
       }

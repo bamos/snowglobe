@@ -13,7 +13,7 @@ import spray.routing.HttpService
 object QueryHandler {
   private val sc = createSparkContext()
 
-  def pageviews(): String = this.synchronized {
+  def visitors(cols: Seq[String]): String = this.synchronized {
     val sb = new StringBuilder()
     val events = sc.textFile("../events.tsv").flatMap(
       Helper.tsvToCanonicalOutput(_)
@@ -21,7 +21,7 @@ object QueryHandler {
     // val queryToRun = QueryMeta.info(name)
     // val queryResult = queryToRun.run(sc,data)
     // val queryResultCollected = queryResult.take(10).map(_.toString)
-    html.pageviews("Pageviews").toString
+    html.visitors(events.collect(), cols).toString
   }
 
   def createSparkContext(): SparkContext = {

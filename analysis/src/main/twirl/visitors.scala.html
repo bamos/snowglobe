@@ -1,0 +1,27 @@
+@import scala.collection.immutable.ListMap
+@(results: Array[ListMap[String,String]], cols: Seq[String])
+
+@base("visitors") {
+  <div class="container">
+    <div class="hero-unit">
+      <h1>Visitors</h1>
+      Today
+      <center>
+        <table class="table table-striped table-hover table-condensed">
+          <tr>
+            @for(col<-cols) {
+              <th>@col</th>
+            }
+          </tr>
+          @for(result<-results) {
+            <tr>
+              @for(col<-cols) {
+                <td>@{result.get(col)}</td>
+              }
+            </tr>
+          }
+        </table>
+      </center>
+    </div>
+  </div>
+}

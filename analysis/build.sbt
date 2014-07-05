@@ -1,5 +1,7 @@
 import com.typesafe.sbt.SbtStartScript
 
+Revolver.settings
+
 name := "SnowGlobe Analysis"
 
 version := "1.0"
