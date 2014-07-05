@@ -89,6 +89,7 @@ limitations under the License.
 
 [snowplow]: https://github.com/snowplow/snowplow
 [js-tracker]: https://github.com/snowplow/snowplow-javascript-tracker
+[scala-collector]: https://github.com/snowplow/snowplow/tree/master/2-collectors/scala-stream-collector
 [scala-enrichment]: https://github.com/snowplow/snowplow/tree/master/3-enrich/scala-kinesis-enrich
 [canonical-output]: https://github.com/snowplow/snowplow/wiki/canonical-event-model
 [spark]: http://spark.apache.org/
