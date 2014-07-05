@@ -1,0 +1,14 @@
+@(queries: Seq[String])
+
+@base("index"){
+  <div class="container">
+    <div class="hero-unit">
+      <h1>Queries.</h1>
+      <ul>
+        @for(query<-queries) {
+          <li><a href="/query?name=@(query)">@(query)</a></li>
+        }
+      </ul>
+    </div>
+  </div>
+}

@@ -1,4 +1,4 @@
-package io.bamos.snowglobe.common
+package io.bamos.snowglobe
 
 import org.apache.spark.{SparkConf,SparkContext}
 import SparkContext._
@@ -7,19 +7,19 @@ import java.io.{File,PrintWriter}
 
 import scala.collection.immutable.ListMap
 
-object AnalysisApp extends App {
-  val conf = new SparkConf()
-    .setMaster("local[4]")
-    .setAppName("SnowGlobeAnalysis")
-    .setJars(Seq())
-  val sc = new SparkContext(conf)
-  val events = sc.textFile("../events.tsv").flatMap(tsvToCanonicalOutput(_))
-  events.take(1).map{r => println(r.mkString(", "))}
-  sc.stop()
+// Akka and Spray
+import akka.actor.{ActorSystem, Props}
+import akka.io.IO
+import spray.can.Http
 
-  def tsvToCanonicalOutput(tsv: String): Option[ListMap[String,String]] = {
-    val tsvFields = tsv.split("\t")
-    if (tsvFields.size != Helper.headers.size) None
-    else Option(ListMap(Helper.headers.zip(tsvFields): _*))
+object AnalysisApp {
+	def main(args: Array[String]) {
+    implicit val system = ActorSystem.create("SnowGlobeAnalysis")
+    val handler = system.actorOf(
+      Props(classOf[SnowGlobeServiceActor]),
+      name = "handler"
+    )
+
+    IO(Http) ! Http.Bind(handler, interface="0.0.0.0", port=8585)
   }
 }
