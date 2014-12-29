@@ -1,7 +1,4 @@
 # SnowGlobe
-__Small-scale web analytics for self-hosting and hacking
-with Snowplow, Spark, Spray, Twirl, and d3.js.__
-
 SnowGlobe ties together components from the [Snowplow][snowplow]
 analytics framework for simple pageview analytics and requires
 minimal configuration.
