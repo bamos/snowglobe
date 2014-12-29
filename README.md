@@ -23,7 +23,6 @@ the Snowplow event data.
 On the server, start the collector and enricher with the following
 instructions, which can be done in a detached screen or tmux
 session, or run by an init daemon.
-(TODO: Add upstart script.)
 
 + `collector.conf` and `enrich.conf` contain sensible default
    configurations for Snowplow's collector and enricher,
@@ -33,6 +32,14 @@ session, or run by an init daemon.
   Scala enricher.
   The enricher will output [Snowplow canonical output][canonical-output]
   as rows in `events.tsv`.
++ [systemd.unit]() is a [systemctl unit](https://wiki.archlinux.org/index.php/systemd)
+  to run `start-collect-enrich.sh`.
+  Copy the config with `sudo cp $PWD/snowglobe.service /etc/systemd/system/`
+  and reload the units with `sudo systemctl daemon-reload`.
+  The config cannot be symlinked due to
+  [this](https://bugzilla.redhat.com/show_bug.cgi?id=1014311) systemd behavior.
+  The service can be started immediately with `sudo systemctl start` and
+  run on boot with `sudo systemctl enable`.
 
 ## Adding JavaScript tags.
 Next, ensure that the collector and enricher are properly configured
