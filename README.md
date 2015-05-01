@@ -7,9 +7,6 @@ The [JavaScript tracker][js-tracker] is used with the
 to output [Snowplow canonical output][canonical-output] for the pageviews
 as a tab separated file at `events.tsv`.
 
-[Spark][spark] is a Scala data query engine and is used to process
-the Snowplow event data.
-
 ## Prerequisites, installing, and configuring.
 1. Install wget, Python, sbt, scala, and the JRE (&ge; 1.7).
 2. Ensure `JAVA_HOME` in `env.sh` contains a Java distribution
@@ -40,7 +37,7 @@ session, or run by an init daemon.
 
 ## Adding JavaScript tags.
 Next, ensure that the collector and enricher are properly configured
-and started by running `lynx index.html` on the server.
+and started by opening `index.html` on the server.
 `events.tsv` should now contain the tab separated event.
 
 Next, copy and paste the following code to your webpage's
@@ -63,12 +60,6 @@ try {
 } catch (err) {}
 </script>
 ```
-
-## Analyzing webpage data with Spark over emails.
-TODO
-
-## Analyzing webpage data with Spark, Spray, Twirl, and d3.js.
-TODO
 
 ## Licensing.
 
@@ -96,4 +87,3 @@ limitations under the License.
 [scala-collector]: https://github.com/snowplow/snowplow/tree/master/2-collectors/scala-stream-collector
 [scala-enrichment]: https://github.com/snowplow/snowplow/tree/master/3-enrich/scala-kinesis-enrich
 [canonical-output]: https://github.com/snowplow/snowplow/wiki/canonical-event-model
-[spark]: http://spark.apache.org/
