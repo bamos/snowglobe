@@ -10,7 +10,7 @@ The [JavaScript tracker][js-tracker] is used with the
 to output [Snowplow enriched events](https://github.com/snowplow/snowplow/blob/master/3-enrich/scala-common-enrich/src/main/scala/com.snowplowanalytics.snowplow.enrich/common/outputs/EnrichedEvent.scala)
 as a tab separated file.
 
-SnowGlobe uniquely provide Haskell-driven analytics on the data.
+SnowGlobe uniquely provides Haskell-driven analytics on the data.
 
 # Prerequisites, installing, and configuration
 1. Install wget, Python, sbt, scala, and the JRE (&ge; 1.7).
