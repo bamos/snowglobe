@@ -1,4 +1,4 @@
-export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_05.jdk/Contents/Home
+#export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_05.jdk/Contents/Home
 
 CF=http://d2io1hx8u877l0.cloudfront.net
 COL_DIR=2-collectors/scala-stream-collector
