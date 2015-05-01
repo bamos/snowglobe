@@ -66,6 +66,11 @@ try {
 </script>
 ```
 
+# Analysis, Visualization, and Testing
+In-progress.
+Please contact [Brandon Amos](http://bamos.github.io)
+if you're interested in helping.
+
 # Licensing
 
 SnowGlobe portions copyright 2014-2015 Brandon Amos under the
