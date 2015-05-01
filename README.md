@@ -1,37 +1,42 @@
 ![](https://raw.githubusercontent.com/bamos/snowglobe/master/images/snowglobe.png)
 
-SnowGlobe ties together components from the [Snowplow][snowplow]
-analytics framework for simple pageview analytics and requires
-minimal configuration.
+SnowGlobe provides minimal-configuration web analytics
+for small-scale and personal websites.
+
+SnowGlobe integrates components from the
+[Snowplow analytics framework][snowplow] to achieve this.
 The [JavaScript tracker][js-tracker] is used with the
 [Scala collector][scala-collector] and [Scala enrichment][scala-enrichment]
-to output [Snowplow canonical output][canonical-output] for the pageviews
-as a tab separated file at `events.tsv`.
+to output [Snowplow enriched events](https://github.com/snowplow/snowplow/blob/master/3-enrich/scala-common-enrich/src/main/scala/com.snowplowanalytics.snowplow.enrich/common/outputs/EnrichedEvent.scala)
+as a tab separated file.
+
+SnowGlobe uniquely provide Haskell-driven analytics on the data.
 
 # Prerequisites, installing, and configuration
 1. Install wget, Python, sbt, scala, and the JRE (&ge; 1.7).
-2. Ensure `JAVA_HOME` in `env.sh` contains a Java distribution
-   version 1.7 or above.
-2. Run `./bootstrap.sh` to download Snowplow and GeoLite binaries.
+2. If the default Java distribution is not version 1.7 or above,
+   set `JAVA_HOME` in `env.sh`.
+2. Run `./scripts/bootstrap.sh` to download Snowplow and GeoLite binaries.
 
 # Collecting and storing events to TSV files
 On the server, start the collector and enricher with the following
 instructions, which can be done in a detached screen or tmux
 session, or run by an init daemon.
 
-+ `collector.conf` and `enrich.conf` contain sensible default
++ `conf/collector.conf` and `conf/enrich.conf` contain sensible default
    configurations for Snowplow's collector and enricher,
    but can be modified as desired.
-+ `./start-collect-enrich.sh` will start Snowplow's collector on port
++ `scripts/start-collect-enrich.sh` will start Snowplow's collector on port
   8080 to pipe Base 64 serialized Thrift raw event output to Snowplow's
   Scala enricher.
   The enricher will output [Snowplow canonical output][canonical-output]
-  as rows in `events.tsv`.
+  as rows in `data/events.tsv`.
   This script uses `stdbuf` from GNU coreutils to disable stdout
   buffering.
-+ [systemd.unit]() is a [systemctl unit](https://wiki.archlinux.org/index.php/systemd)
++ [snowglobe.service][snowglobe.service] is a
+  [systemctl unit](https://wiki.archlinux.org/index.php/systemd)
   to run `start-collect-enrich.sh`.
-  Copy the config with `sudo cp $PWD/snowglobe.service /etc/systemd/system/`
+  Copy the config with `sudo cp sample/snowglobe.service /etc/systemd/system/`
   and reload the units with `sudo systemctl daemon-reload`.
   The config cannot be symlinked due to
   [this](https://bugzilla.redhat.com/show_bug.cgi?id=1014311) systemd behavior.
@@ -86,4 +91,4 @@ and my modifications are under the same license.
 [js-tracker]: https://github.com/snowplow/snowplow-javascript-tracker
 [scala-collector]: https://github.com/snowplow/snowplow/tree/master/2-collectors/scala-stream-collector
 [scala-enrichment]: https://github.com/snowplow/snowplow/tree/master/3-enrich/scala-kinesis-enrich
-[canonical-output]: https://github.com/snowplow/snowplow/wiki/canonical-event-model
+[snowglobe.service]: https://github.com/bamos/snowglobe/blob/master/sample/snowglobe.service
