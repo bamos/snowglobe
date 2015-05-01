@@ -7,7 +7,7 @@ SnowGlobe integrates components from the
 [Snowplow analytics framework][snowplow] to achieve this.
 The [JavaScript tracker][js-tracker] is used with the
 [Scala collector][scala-collector] and [Scala enrichment][scala-enrichment]
-to output [Snowplow enriched events](https://github.com/snowplow/snowplow/blob/master/3-enrich/scala-common-enrich/src/main/scala/com.snowplowanalytics.snowplow.enrich/common/outputs/EnrichedEvent.scala)
+to output [Snowplow enriched events][enriched-events]
 as a tab separated file.
 
 SnowGlobe uniquely provides Haskell-driven analytics on the data.
@@ -29,7 +29,7 @@ session, or run by an init daemon.
 + `scripts/start-collect-enrich.sh` will start Snowplow's collector on port
   8080 to pipe Base 64 serialized Thrift raw event output to Snowplow's
   Scala enricher.
-  The enricher will output [Snowplow canonical output][canonical-output]
+  The enricher will output [Snowplow enriched events][enriched-events]
   as rows in `data/events.tsv`.
   This script uses `stdbuf` from GNU coreutils to disable stdout
   buffering.
@@ -92,3 +92,4 @@ and my modifications are under the same license.
 [scala-collector]: https://github.com/snowplow/snowplow/tree/master/2-collectors/scala-stream-collector
 [scala-enrichment]: https://github.com/snowplow/snowplow/tree/master/3-enrich/scala-kinesis-enrich
 [snowglobe.service]: https://github.com/bamos/snowglobe/blob/master/sample/snowglobe.service
+[enriched-events]: https://github.com/snowplow/snowplow/blob/master/3-enrich/scala-common-enrich/src/main/scala/com.snowplowanalytics.snowplow.enrich/common/outputs/EnrichedEvent.scala
