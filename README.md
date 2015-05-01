@@ -1,5 +1,3 @@
-# SnowGlobe
-
 ![](https://raw.githubusercontent.com/bamos/snowglobe/master/images/snowglobe.png)
 
 SnowGlobe ties together components from the [Snowplow][snowplow]
