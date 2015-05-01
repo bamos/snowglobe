@@ -1,4 +1,7 @@
 # SnowGlobe
+
+![](https://raw.githubusercontent.com/bamos/snowglobe/master/images/snowglobe.png)
+
 SnowGlobe ties together components from the [Snowplow][snowplow]
 analytics framework for simple pageview analytics and requires
 minimal configuration.
@@ -7,13 +10,13 @@ The [JavaScript tracker][js-tracker] is used with the
 to output [Snowplow canonical output][canonical-output] for the pageviews
 as a tab separated file at `events.tsv`.
 
-## Prerequisites, installing, and configuring.
+# Prerequisites, installing, and configuration
 1. Install wget, Python, sbt, scala, and the JRE (&ge; 1.7).
 2. Ensure `JAVA_HOME` in `env.sh` contains a Java distribution
    version 1.7 or above.
 2. Run `./bootstrap.sh` to download Snowplow and GeoLite binaries.
 
-## Collecting and storing events to TSV files.
+# Collecting and storing events to TSV files
 On the server, start the collector and enricher with the following
 instructions, which can be done in a detached screen or tmux
 session, or run by an init daemon.
@@ -26,6 +29,8 @@ session, or run by an init daemon.
   Scala enricher.
   The enricher will output [Snowplow canonical output][canonical-output]
   as rows in `events.tsv`.
+  This script uses `stdbuf` from GNU coreutils to disable stdout
+  buffering.
 + [systemd.unit]() is a [systemctl unit](https://wiki.archlinux.org/index.php/systemd)
   to run `start-collect-enrich.sh`.
   Copy the config with `sudo cp $PWD/snowglobe.service /etc/systemd/system/`
@@ -35,7 +40,7 @@ session, or run by an init daemon.
   The service can be started immediately with `sudo systemctl start` and
   run on boot with `sudo systemctl enable`.
 
-## Adding JavaScript tags.
+# Adding JavaScript tags to your webpages.
 Next, ensure that the collector and enricher are properly configured
 and started by opening `index.html` on the server.
 `events.tsv` should now contain the tab separated event.
@@ -61,26 +66,18 @@ try {
 </script>
 ```
 
-## Licensing.
+# Licensing
 
-SnowGlobe portions copyright 2014 Brandon Amos under the Apache License,
-Version 2.0.
-Other portions receive licensing from their parent projects:
-Snowplow portions licensed to Snowplow Analytics Ltd.
-and Spark portions licensed to the Apache Software Foundation (ASF)
-under one or more contributor license agreements.
+SnowGlobe portions copyright 2014-2015 Brandon Amos under the
+Apache License.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+Snowplow portions retain their licenses from Snowplow Analytics Ltd.
+and remain unmodified.
 
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+The [original SnowGlobe graphic](https://flic.kr/p/7be69Q)
+is open-sourced under
+[CC-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0/),
+and my modifications are under the same license.
 
 [snowplow]: https://github.com/snowplow/snowplow
 [js-tracker]: https://github.com/snowplow/snowplow-javascript-tracker
