@@ -11,7 +11,7 @@ JAVA_VER=$(java -version 2>&1 | \
 cd ..
 
 stdbuf -i0 -o0 -e0 \
-  ./vendor/$COL --config conf/collector.conf \
-  | ./vendor/$ENR --config conf/enrich.conf \
+  ./vendor/$COL --config ./conf/collector.conf \
+  | ./vendor/$ENR --config ./conf/enrich.conf \
   >> data/events.tsv \
   2>> data/snowglobe-errors.out
