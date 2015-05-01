@@ -43,10 +43,10 @@ session, or run by an init daemon.
   The service can be started immediately with `sudo systemctl start` and
   run on boot with `sudo systemctl enable`.
 
-# Adding JavaScript tags to your webpages.
+# Adding JavaScript tags to your webpages
 Next, ensure that the collector and enricher are properly configured
-and started by opening `index.html` on the server.
-`events.tsv` should now contain the tab separated event.
+and started by opening `sample/index.html` on the server.
+`data/events.tsv` should now contain the tab separated event.
 
 Next, copy and paste the following code to your webpage's
 templates to send events on the pages you wish to track,
