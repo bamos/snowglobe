@@ -4,3 +4,5 @@ sp.js
 GeoLiteCity.dat
 *.out
 *.tsv
+
+analysis/dist
