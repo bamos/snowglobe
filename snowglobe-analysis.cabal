@@ -22,7 +22,7 @@ executable snowglobe-analysis
                       SnowGlobe.Time,
                       SnowGlobe.Queries
   -- other-extensions:
-  build-depends:       base >=4.8 && <4.9,
+  build-depends:       base >=4.7
                        bytestring >= 0.10,
                        cassava >= 0.4,
                        hs-GeoIP >= 0.3,
