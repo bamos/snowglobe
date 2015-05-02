@@ -27,6 +27,7 @@ executable snowglobe-analysis
                        cassava >= 0.4,
                        optparse-applicative >= 0.11,
                        time >= 1.5,
-                       vector >= 0.10
+                       vector >= 0.10,
+                       hs-GeoIP >= 0.3
   -- hs-source-dirs:
   default-language:    Haskell2010

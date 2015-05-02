@@ -1,6 +1,7 @@
 import Data.Char(ord)
 import Data.Csv (HasHeader(NoHeader), decodeWith, decDelimiter,
                  defaultDecodeOptions)
+import Data.Geolocation.GeoIP(memory_cache, openGeoDB)
 import Data.Time(getCurrentTime, getCurrentTimeZone, utcToLocalTime)
 
 import qualified Data.ByteString.Lazy as BL
@@ -11,11 +12,13 @@ import Options.Applicative
 import SnowGlobe.EnrichedEvent
 import SnowGlobe.Queries(dailyReport, numDailyEvents)
 
-data Args = Args {events :: String , mode :: String} deriving (Show)
+data Args = Args {events, geoDB, mode :: String} deriving (Show)
 
 args :: Parser Args
 args = Args <$> strOption (long "events" <> metavar "FILE" <>
                                 help "Location of events.tsv" )
+       <*> strOption (long "geoDB" <> metavar "FILE" <>
+                                help "Location of GeoLiteCity.dat" )
        <*> strOption (long "mode" <> metavar "MODE" <>
                            help "One of: NumDailyEvents, DailyReport" )
 
@@ -28,12 +31,13 @@ analytics args = do
   csvData <- BL.readFile $ events args
   tz <- getCurrentTimeZone
   now <- utcToLocalTime tz <$> getCurrentTime
+  geo <- openGeoDB memory_cache $ geoDB args
   case decodeCsv csvData of
     Left err -> putStrLn err
     Right eventsV ->
         case mode args of
           "NumDailyEvents" -> print $ numDailyEvents tz now events
-          "DailyReport" -> putStrLn $ dailyReport tz now events
+          "DailyReport" -> putStrLn $ dailyReport tz now geo events
           m -> putStrLn $ "Error: Unexpected mode: " ++ m
         where events = V.toList eventsV
 
