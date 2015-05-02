@@ -19,7 +19,8 @@ cabal-version:       >=1.10
 executable snowglobe-analysis
   main-is:             Main.hs
   other-modules:      SnowGlobe.EnrichedEvent,
-                      SnowGlobe.Time
+                      SnowGlobe.Time,
+                      SnowGlobe.Queries
   -- other-extensions:
   build-depends:       base >=4.8 && <4.9,
                        bytestring >= 0.10,
