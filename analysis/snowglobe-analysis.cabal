@@ -18,11 +18,13 @@ cabal-version:       >=1.10
 
 executable snowglobe-analysis
   main-is:             Main.hs
-  other-modules:      SnowGlobe.EnrichedEvent
+  other-modules:      SnowGlobe.EnrichedEvent,
+                      SnowGlobe.Time
   -- other-extensions:
   build-depends:       base >=4.8 && <4.9,
                        bytestring >= 0.10,
                        cassava >= 0.4,
-                       vector >= 0.10
+                       vector >= 0.10,
+                       time >= 1.5
   -- hs-source-dirs:
   default-language:    Haskell2010
