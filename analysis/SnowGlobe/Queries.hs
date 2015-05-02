@@ -66,7 +66,7 @@ getWhois ipAddr =
 
 getVisitorInfo:: GeoDB -> [EnrichedEvent] -> String
 getVisitorInfo geo all@(e1:rest) =
-    concat ["=== ", userIpaddress e1, " ===\n",
+    concat ["--- ", userIpaddress e1, " ---\n",
             "+ Number of Visits: ", numVisits, "\n",
             "+ Geo: ", getGeo geo e1, "\n",
             "+ Organization: ", getWhois (userIpaddress e1), "\n",
@@ -76,12 +76,20 @@ getVisitorInfo geo all@(e1:rest) =
 
 dailyReport:: TimeZone -> LocalTime -> GeoDB -> [EnrichedEvent] -> String
 dailyReport tz now geo events = intercalate "\n\n" report
-    where report = [dailyInfoStr, visitorInfoStr]
-          dailyInfoStr = "=== Top Pages ===\n" ++ dailyTopPages
-          dailyTopPages = topPageInfo sortedTEvents $ Just 5
-          visitorInfoStr = intercalate "\n\n" visitorInfo
-          visitorInfo = map (getVisitorInfo geo) sortedVisitors
+    where report = ["=== Statistics ===", stats,
+                    "=== Top " ++ show numTopPages ++ " Pages ===",
+                    dailyTopPages,
+                    "=== Top " ++ show numTopVisitors ++ " Visitors ===",
+                    intercalate "\n\n" visitorInfo]
+          stats = intercalate "\n"
+                  ["+ " ++ (show $ length visitors) ++ " unique visitors.",
+                   "+ " ++ (show $ length todaysEvents) ++ " total events."]
+          dailyTopPages = topPageInfo sortedTEvents $ Just numTopPages
+          visitorInfo = take numTopVisitors $
+                        map (getVisitorInfo geo) sortedVisitors
           sortedVisitors = sortBy (flip compare `on` length) visitors
           visitors = groupBy ((==) `on` userIpaddress) sortedTEvents
           sortedTEvents = sortBy (compare `on` userIpaddress) todaysEvents
           todaysEvents = getTodaysEvents tz now events
+          numTopPages = 5
+          numTopVisitors = 10
