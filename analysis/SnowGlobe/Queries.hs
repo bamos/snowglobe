@@ -5,7 +5,9 @@ import Data.List(groupBy, intercalate, sortBy)
 import Data.Time(Day, LocalTime(..), TimeZone,
                     getCurrentTime, getCurrentTimeZone, utcToLocalTime)
 import Data.Geolocation.GeoIP(GeoDB, geoLocateByIPAddress)
+import Network.Whois(whois)
 import System.IO.Unsafe(unsafePerformIO)
+import Text.Regex.Posix
 
 import qualified Data.Geolocation.GeoIP as G
 import qualified Data.ByteString.Char8 as B
@@ -53,18 +55,33 @@ getGeo geo event =
     where geoM = unsafePerformIO $ geoLocateByIPAddress geo $ B.pack ip
           ip = userIpaddress event
 
+getWhois:: String -> String
+getWhois ipAddr =
+    case m of
+      (Nothing,_) -> "Not found"
+      (Just whoisStr,_) ->
+          if null r then "Not found" else head r !! 1
+          where r = whoisStr =~ "Organization: *(.*)" :: [[String]]
+    where m = unsafePerformIO $ whois ipAddr
+
 getVisitorInfo:: GeoDB -> [EnrichedEvent] -> String
-getVisitorInfo geo all@(e1:rest) = concat
-                               ["=== ", userIpaddress e1, " ===\n",
-                                "+ Number of Visits: ", numVisits, "\n",
-                                "+ Geo: ", getGeo geo e1, "\n",
-                                "+ Timezone: ", osTimezone e1, "\n",
-                                "+ Top Pages:\n", topPageInfo all Nothing]
+getVisitorInfo geo all@(e1:rest) =
+    concat ["=== ", userIpaddress e1, " ===\n",
+            "+ Number of Visits: ", numVisits, "\n",
+            "+ Geo: ", getGeo geo e1, "\n",
+            "+ Organization: ", getWhois (userIpaddress e1), "\n",
+            "+ Timezone: ", osTimezone e1, "\n",
+            "+ Top Pages:\n", topPageInfo all Nothing]
     where numVisits = show $ length all
 
 dailyReport:: TimeZone -> LocalTime -> GeoDB -> [EnrichedEvent] -> String
-dailyReport tz now geo events = intercalate "\n\n" visitorInfo
-    where visitorInfo = map (getVisitorInfo geo) sortedVisitors
+dailyReport tz now geo events = intercalate "\n\n" report
+    where report = [dailyInfoStr, visitorInfoStr]
+          dailyInfoStr = "=== Top Pages ===\n" ++ dailyTopPages
+          dailyTopPages = topPageInfo sortedTEvents $ Just 5
+          visitorInfoStr = intercalate "\n\n" visitorInfo
+          visitorInfo = map (getVisitorInfo geo) sortedVisitors
           sortedVisitors = sortBy (flip compare `on` length) visitors
-          visitors = groupBy ((==) `on` userIpaddress) todaysEvents
+          visitors = groupBy ((==) `on` userIpaddress) sortedTEvents
+          sortedTEvents = sortBy (compare `on` userIpaddress) todaysEvents
           todaysEvents = getTodaysEvents tz now events

@@ -25,9 +25,11 @@ executable snowglobe-analysis
   build-depends:       base >=4.8 && <4.9,
                        bytestring >= 0.10,
                        cassava >= 0.4,
+                       hs-GeoIP >= 0.3,
                        optparse-applicative >= 0.11,
+                       regex-posix >= 0.95,
                        time >= 1.5,
                        vector >= 0.10,
-                       hs-GeoIP >= 0.3
+                       whois >= 1.2.2
   -- hs-source-dirs:
   default-language:    Haskell2010
