@@ -31,5 +31,5 @@ executable snowglobe-analysis
                        time >= 1.5,
                        vector >= 0.10,
                        whois >= 1.2.2
-  -- hs-source-dirs:
+  hs-source-dirs:      analysis
   default-language:    Haskell2010
