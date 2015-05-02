@@ -24,7 +24,8 @@ executable snowglobe-analysis
   build-depends:       base >=4.8 && <4.9,
                        bytestring >= 0.10,
                        cassava >= 0.4,
-                       vector >= 0.10,
-                       time >= 1.5
+                       optparse-applicative >= 0.11,
+                       time >= 1.5,
+                       vector >= 0.10
   -- hs-source-dirs:
   default-language:    Haskell2010
