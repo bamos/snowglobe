@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/bamos/snowglobe.svg?branch=master)](https://travis-ci.org/bamos/snowglobe)
+
 ![](https://raw.githubusercontent.com/bamos/snowglobe/master/images/snowglobe.png)
 
 SnowGlobe provides minimal-configuration web analytics
