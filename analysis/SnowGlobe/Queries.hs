@@ -28,20 +28,24 @@ getTodaysEvents tz now = filter (isToday tz now)
 numDailyEvents:: TimeZone -> LocalTime -> [EnrichedEvent] -> Int
 numDailyEvents tz now events = length $ getTodaysEvents tz now events
 
-getPageInfo:: [EnrichedEvent] -> String
-getPageInfo all@(e1:rest) = concat ["  [", show numHits, " ", hits, "]: ", url]
+getEventInfo:: (EnrichedEvent->String) -> [EnrichedEvent] -> String
+getEventInfo field all@(e1:rest) =
+    concat ["  [", show numHits, " ", hits, "]: ", url]
     where numHits = length all
           hits = if numHits == 1 then "Hit" else "Hits"
-          url = pageUrl e1
+          url = field e1
 
-topPageInfo:: [EnrichedEvent] -> Maybe Int -> String
-topPageInfo events mN = intercalate "\n" $ map getPageInfo topNPages
-    where topNPages = case mN of
-                        Nothing -> topPages
-                        Just n -> take n topPages
-          topPages = sortBy (flip compare `on` length) gPages
-          gPages = groupBy ((==) `on` pageUrl) sortedPages
-          sortedPages = sortBy (compare `on` pageUrl) events
+topEventInfo:: (EnrichedEvent->String) -> [EnrichedEvent] -> Maybe Int ->
+               String
+topEventInfo field events mN =
+    intercalate "\n" $ map (getEventInfo field) topNFields
+    where topNFields = case mN of
+                        Nothing -> topFields
+                        Just n -> take n topFields
+          topFields = sortBy (flip compare `on` length) groupedFields
+          groupedFields = groupBy ((==) `on` field) $
+                          sortBy (compare `on` field) $
+                          filter (not . null . field) events
 
 getGeo:: GeoDB -> EnrichedEvent -> String
 getGeo geo event =
@@ -71,7 +75,8 @@ getVisitorInfo geo all@(e1:rest) =
             "+ Geo: ", getGeo geo e1, "\n",
             "+ Organization: ", getWhois (userIpaddress e1), "\n",
             "+ Timezone: ", osTimezone e1, "\n",
-            "+ Top Pages:\n", topPageInfo all Nothing]
+            "+ Top Pages:\n", topEventInfo pageUrl all Nothing, "\n\n",
+            "+ Top Referrers:\n", topEventInfo pageReferrer all Nothing]
     where numVisits = show $ length all
 
 dailyReport:: TimeZone -> LocalTime -> GeoDB -> [EnrichedEvent] -> String
@@ -79,17 +84,21 @@ dailyReport tz now geo events = intercalate "\n\n" report
     where report = ["=== Statistics ===", stats,
                     "=== Top " ++ show numTopPages ++ " Pages ===",
                     dailyTopPages,
+                    "=== Top " ++ show numTopReferrers ++ " Referrers ===",
+                    dailyTopReferrers,
                     "=== Top " ++ show numTopVisitors ++ " Visitors ===",
                     intercalate "\n\n" visitorInfo]
           stats = intercalate "\n"
-                  ["+ " ++ (show $ length visitors) ++ " unique visitors.",
-                   "+ " ++ (show $ length todaysEvents) ++ " total events."]
-          dailyTopPages = topPageInfo sortedTEvents $ Just numTopPages
+                  ["+ " ++ show (length visitors) ++ " unique visitors.",
+                   "+ " ++ show (length todaysEvents) ++ " total events."]
+          dailyTopReferrers = topEventInfo pageReferrer sortedTEvents $ Just numTopReferrers
+          dailyTopPages = topEventInfo pageUrl sortedTEvents $ Just numTopPages
           visitorInfo = take numTopVisitors $
                         map (getVisitorInfo geo) sortedVisitors
           sortedVisitors = sortBy (flip compare `on` length) visitors
           visitors = groupBy ((==) `on` userIpaddress) sortedTEvents
           sortedTEvents = sortBy (compare `on` userIpaddress) todaysEvents
           todaysEvents = getTodaysEvents tz now events
+          numTopReferrers = 5
           numTopPages = 5
           numTopVisitors = 10
