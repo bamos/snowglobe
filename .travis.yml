@@ -1,0 +1,8 @@
+language: haskell
+ghc: 7.10
+script:
+  - cd analysis
+  - cabal install --only-dependencies
+  - cabal build
+  - cabal install hlint
+  - hlint .
