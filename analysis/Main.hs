@@ -9,7 +9,7 @@ import qualified Data.Vector as V
 import Options.Applicative
 
 import SnowGlobe.EnrichedEvent
-import SnowGlobe.Queries(numDailyEvents)
+import SnowGlobe.Queries(dailyReport, numDailyEvents)
 
 data Args = Args {events :: String , mode :: String} deriving (Show)
 
@@ -17,7 +17,7 @@ args :: Parser Args
 args = Args <$> strOption (long "events" <> metavar "FILE" <>
                                 help "Location of events.tsv" )
        <*> strOption (long "mode" <> metavar "MODE" <>
-                           help "One of: NumDailyEvents" )
+                           help "One of: NumDailyEvents, DailyReport" )
 
 decodeCsv:: BL.ByteString -> Either String (V.Vector EnrichedEvent)
 decodeCsv = decodeWith opts NoHeader
@@ -33,6 +33,7 @@ analytics args = do
     Right eventsV ->
         case mode args of
           "NumDailyEvents" -> print $ numDailyEvents tz now events
+          "DailyReport" -> putStrLn $ dailyReport tz now events
           m -> putStrLn $ "Error: Unexpected mode: " ++ m
         where events = V.toList eventsV
 
