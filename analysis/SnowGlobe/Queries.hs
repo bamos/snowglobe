@@ -28,12 +28,12 @@ getPageInfo all@(e1:rest) = concat ["  [", show numHits, " ", hits, "]: ", url]
           url = pageUrl e1
 
 topPageInfo:: [EnrichedEvent] -> Maybe Int -> String
-topPageInfo events mN = intercalate "\n" $ map getPageInfo $ topNPages
+topPageInfo events mN = intercalate "\n" $ map getPageInfo topNPages
     where topNPages = case mN of
                         Nothing -> topPages
-                        Just n -> take n $ topPages
-          topPages = reverse . sortBy (compare `on` length) $ gPages
-          gPages = groupBy ((==) `on` pageUrl) $ sortedPages
+                        Just n -> take n topPages
+          topPages = sortBy (flip compare `on` length) gPages
+          gPages = groupBy ((==) `on` pageUrl) sortedPages
           sortedPages = sortBy (compare `on` pageUrl) events
 
 getVisitorInfo:: [EnrichedEvent] -> String
@@ -45,7 +45,7 @@ getVisitorInfo all@(e1:rest) = concat ["=== ", userIpaddress e1, " ===\n",
 
 dailyReport:: TimeZone -> LocalTime -> [EnrichedEvent] -> String
 dailyReport tz now events = intercalate "\n\n" visitorInfo
-    where visitorInfo = map getVisitorInfo $ sortedVisitors
-          sortedVisitors = reverse . sortBy (compare `on` length) $ visitors
-          visitors = groupBy ((==) `on` userIpaddress) $ todaysEvents
+    where visitorInfo = map getVisitorInfo sortedVisitors
+          sortedVisitors = sortBy (flip compare `on` length) visitors
+          visitors = groupBy ((==) `on` userIpaddress) todaysEvents
           todaysEvents = getTodaysEvents tz now events
