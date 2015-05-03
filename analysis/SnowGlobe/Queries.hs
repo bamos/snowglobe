@@ -89,8 +89,8 @@ dailyReport tz now geo events = intercalate "\n\n" report
                     "# Visitors",
                     intercalate "\n\n" visitorInfo]
           stats = intercalate "\n"
-                  ["+ " ++ show (length visitors) ++ " unique visitors.",
-                   "+ " ++ show (length todaysEvents) ++ " total events."]
+                  ["+ " ++ (show . length) visitors ++ " unique visitors.",
+                   "+ " ++ (show . length) todaysEvents ++ " total events."]
           dailyReferrers = sortedEventInfo pageReferrer sortedTEvents
           dailyPages = sortedEventInfo pageUrl sortedTEvents
           visitorInfo = map (getVisitorInfo geo) sortedVisitors
