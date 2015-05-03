@@ -23,7 +23,7 @@ isToday tz now e =
     where eTimeM = localDay <$> parse tz (collectorTstamp e) :: Maybe Day
 
 getTodaysEvents:: TimeZone -> LocalTime -> [EnrichedEvent] -> [EnrichedEvent]
-getTodaysEvents tz now = filter (isToday tz now)
+getTodaysEvents tz now = filter $ isToday tz now
 
 dayNumEvents:: TimeZone -> LocalTime -> [EnrichedEvent] -> Int
 dayNumEvents tz now = length . getTodaysEvents tz now
@@ -37,24 +37,25 @@ getEventInfo field all@(e1:rest) =
 
 sortedEventInfo:: (EnrichedEvent->String) -> [EnrichedEvent] -> String
 sortedEventInfo field events =
-    (intercalate "\n" . map (getEventInfo field)) fields
+    intercalate "\n" . map (getEventInfo field) $ fields
     where fields = sortBy (flip compare `on` length) groupedFields
-          groupedFields = (groupBy ((==) `on` field) .
-                           sortBy (compare `on` field) .
-                           filter (not . null . field)) events
+          groupedFields = groupBy ((==) `on` field) .
+                          sortBy (compare `on` field) .
+                          filter (not . null . field) $
+                          events
 
 getGeo:: GeoDB -> EnrichedEvent -> String
 getGeo geo event =
     case geoM of
       Nothing -> "Not found"
       Just geo ->
-          case ((B.unpack . G.geoCity) geo,
-                (B.unpack . G.geoCountryName) geo) of
+          case (B.unpack . G.geoCity $ geo,
+                B.unpack . G.geoCountryName $ geo) of
             ("","") -> "Not found"
             ("",country) -> country
             (city, country) -> city ++ ", " ++ country
-    where geoM = (unsafeDupablePerformIO . geoLocateByIPAddress geo) ip
-          ip = (B.pack . userIpaddress) event
+    where geoM = unsafeDupablePerformIO . geoLocateByIPAddress geo $ ip
+          ip = B.pack . userIpaddress $ event
 
 getWhois:: String -> String
 getWhois ipAddr =
@@ -63,18 +64,18 @@ getWhois ipAddr =
       (Just whoisStr,_) ->
           if null r then "Not found" else head r !! 1
           where r = whoisStr =~ "Organization: *(.*)" :: [[String]]
-    where m = (unsafeDupablePerformIO . whois) ipAddr
+    where m = unsafeDupablePerformIO . whois $ ipAddr
 
 getVisitorInfo:: GeoDB -> [EnrichedEvent] -> String
 getVisitorInfo geo all@(e1:rest) =
     concat $ ["## ", userIpaddress e1, "\n",
             "+ Number of Visits: ", numVisits, "\n",
             "+ Geo: ", getGeo geo e1, "\n",
-            "+ Organization: ", getWhois (userIpaddress e1), "\n",
+            "+ Organization: ", getWhois $ userIpaddress e1, "\n",
             "+ Timezone: ", osTimezone e1, "\n",
             "+ Pages:\n", sortedEventInfo pageUrl all, "\n"] ++
             referrerInfo
-    where numVisits = (show . length) all
+    where numVisits = show . length $ all
           referrers = sortedEventInfo pageReferrer all
           referrerInfo = if null referrers then []
                          else ["\n+ Referrers:\n", referrers]
@@ -88,12 +89,13 @@ dayReport tz now geo events = intercalate "\n\n" report
           stats = intercalate "\n"
                   ["+ " ++ (show . length) visitors ++ " unique visitors.",
                    "+ " ++ (show . length) todaysEvents ++ " total events."]
-          dayReferrers = sortedEventInfo pageReferrer sortedTEvents
-          dayPages = sortedEventInfo pageUrl sortedTEvents
+          dayReferrers = sortedEventInfo pageReferrer todaysEvents
+          dayPages = sortedEventInfo pageUrl todaysEvents
           visitorInfo = map (getVisitorInfo geo) sortedVisitors
           sortedVisitors = sortBy (flip compare `on` length) visitors
-          visitors = groupBy ((==) `on` userIpaddress) sortedTEvents
-          sortedTEvents = sortBy (compare `on` userIpaddress) todaysEvents
+          visitors = groupBy ((==) `on` userIpaddress) .
+                     sortBy (compare `on` userIpaddress) $
+                     todaysEvents
           todaysEvents = getTodaysEvents tz now events
 
 weekReport:: TimeZone -> LocalTime -> GeoDB -> [EnrichedEvent] -> String
