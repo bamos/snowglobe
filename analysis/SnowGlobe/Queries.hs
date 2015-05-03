@@ -77,7 +77,7 @@ getVisitorInfo geo all@(e1:rest) =
     where numVisits = (show . length) all
           referrers = sortedEventInfo pageReferrer all
           referrerInfo = if null referrers then []
-                        else ["\n+ Referrers:\n", referrers]
+                         else ["\n+ Referrers:\n", referrers]
 
 dailyReport:: TimeZone -> LocalTime -> GeoDB -> [EnrichedEvent] -> String
 dailyReport tz now geo events = intercalate "\n\n" report
