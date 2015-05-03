@@ -1,4 +1,4 @@
-module SnowGlobe.Queries(dailyReport, numDailyEvents) where
+module SnowGlobe.Queries(dayNumEvents, dayReport, weekReport) where
 
 import Data.Function(on)
 import Data.List(groupBy, intercalate, sortBy)
@@ -25,8 +25,8 @@ isToday tz now e =
 getTodaysEvents:: TimeZone -> LocalTime -> [EnrichedEvent] -> [EnrichedEvent]
 getTodaysEvents tz now = filter (isToday tz now)
 
-numDailyEvents:: TimeZone -> LocalTime -> [EnrichedEvent] -> Int
-numDailyEvents tz now = length . getTodaysEvents tz now
+dayNumEvents:: TimeZone -> LocalTime -> [EnrichedEvent] -> Int
+dayNumEvents tz now = length . getTodaysEvents tz now
 
 getEventInfo:: (EnrichedEvent->String) -> [EnrichedEvent] -> String
 getEventInfo field all@(e1:rest) =
@@ -79,22 +79,22 @@ getVisitorInfo geo all@(e1:rest) =
           referrerInfo = if null referrers then []
                          else ["\n+ Referrers:\n", referrers]
 
-dailyReport:: TimeZone -> LocalTime -> GeoDB -> [EnrichedEvent] -> String
-dailyReport tz now geo events = intercalate "\n\n" report
+dayReport:: TimeZone -> LocalTime -> GeoDB -> [EnrichedEvent] -> String
+dayReport tz now geo events = intercalate "\n\n" report
     where report = ["# Statistics", stats,
-                    "# Pages",
-                    dailyPages,
-                    "# Referrers",
-                    dailyReferrers,
-                    "# Visitors",
-                    intercalate "\n\n" visitorInfo]
+                    "# Pages", dayPages,
+                    "# Referrers", dayReferrers,
+                    "# Visitors", intercalate "\n\n" visitorInfo]
           stats = intercalate "\n"
                   ["+ " ++ (show . length) visitors ++ " unique visitors.",
                    "+ " ++ (show . length) todaysEvents ++ " total events."]
-          dailyReferrers = sortedEventInfo pageReferrer sortedTEvents
-          dailyPages = sortedEventInfo pageUrl sortedTEvents
+          dayReferrers = sortedEventInfo pageReferrer sortedTEvents
+          dayPages = sortedEventInfo pageUrl sortedTEvents
           visitorInfo = map (getVisitorInfo geo) sortedVisitors
           sortedVisitors = sortBy (flip compare `on` length) visitors
           visitors = groupBy ((==) `on` userIpaddress) sortedTEvents
           sortedTEvents = sortBy (compare `on` userIpaddress) todaysEvents
           todaysEvents = getTodaysEvents tz now events
+
+weekReport:: TimeZone -> LocalTime -> GeoDB -> [EnrichedEvent] -> String
+weekReport tz now geo events = "TODO"

@@ -10,7 +10,7 @@ import qualified Data.Vector as V
 import Options.Applicative
 
 import SnowGlobe.EnrichedEvent
-import SnowGlobe.Queries(dailyReport, numDailyEvents)
+import SnowGlobe.Queries(dayNumEvents, dayReport, weekReport)
 
 data Args = Args {events, geoDB, mode :: String} deriving (Show)
 
@@ -20,7 +20,7 @@ args = Args <$> strOption (long "events" <> metavar "FILE" <>
        <*> strOption (long "geoDB" <> metavar "FILE" <>
                                 help "Location of GeoLiteCity.dat" )
        <*> strOption (long "mode" <> metavar "MODE" <>
-                           help "One of: NumDailyEvents, DailyReport" )
+                      help "One of: DayNumEvents, DayReport, WeekReport" )
 
 decodeCsv:: BL.ByteString -> Either String (V.Vector EnrichedEvent)
 decodeCsv = decodeWith opts NoHeader
@@ -36,8 +36,9 @@ analytics args = do
     Left err -> putStrLn err
     Right eventsV ->
         case mode args of
-          "NumDailyEvents" -> print $ numDailyEvents tz now events
-          "DailyReport" -> putStrLn $ dailyReport tz now geo events
+          "DayNumEvents" -> print $ dayNumEvents tz now events
+          "DayReport" -> putStrLn $ dayReport tz now geo events
+          "WeekReport" -> putStrLn $ weekReport tz now geo events
           m -> putStrLn $ "Error: Unexpected mode: " ++ m
         where events = V.toList eventsV
 
