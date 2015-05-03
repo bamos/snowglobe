@@ -26,7 +26,7 @@ getTodaysEvents:: TimeZone -> LocalTime -> [EnrichedEvent] -> [EnrichedEvent]
 getTodaysEvents tz now = filter (isToday tz now)
 
 numDailyEvents:: TimeZone -> LocalTime -> [EnrichedEvent] -> Int
-numDailyEvents tz now = length . getTodaysEvents tz now
+numDailyEvents = length . getTodaysEvents
 
 getEventInfo:: (EnrichedEvent->String) -> [EnrichedEvent] -> String
 getEventInfo field all@(e1:rest) =
