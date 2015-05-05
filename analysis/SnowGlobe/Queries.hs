@@ -4,6 +4,7 @@ import Data.Function(on)
 import Data.List(groupBy, intercalate, sortBy)
 import Data.Time(Day, LocalTime(..), TimeZone,
                     getCurrentTime, getCurrentTimeZone, utcToLocalTime)
+import Data.Time.Calendar(addDays, diffDays)
 import Data.Geolocation.GeoIP(GeoDB, geoLocateByIPAddress)
 import Network.Whois(whois)
 import System.IO.Unsafe(unsafeDupablePerformIO)
@@ -15,15 +16,27 @@ import qualified Data.ByteString.Char8 as B
 import SnowGlobe.EnrichedEvent
 import SnowGlobe.Time(parse)
 
-isToday:: TimeZone -> LocalTime -> EnrichedEvent -> Bool
-isToday tz now e =
+isNDaysAgo:: TimeZone -> LocalTime -> Integer -> EnrichedEvent -> Bool
+isNDaysAgo tz now n e =
     case eTimeM of
       Nothing -> False
-      Just eTime -> localDay now == eTime
+      Just eTime -> (==) diff n
+        where diff = diffDays (localDay now) eTime
     where eTimeM = localDay <$> parse tz (collectorTstamp e) :: Maybe Day
 
 getTodaysEvents:: TimeZone -> LocalTime -> [EnrichedEvent] -> [EnrichedEvent]
-getTodaysEvents tz now = filter $ isToday tz now
+getTodaysEvents tz now = filter $ isNDaysAgo tz now 0
+
+getNDaysAgoDate:: LocalTime -> Integer -> String
+getNDaysAgoDate now n = show (addDays (-n) (localDay now))
+
+getWeeksEvents:: TimeZone -> LocalTime -> [EnrichedEvent] ->
+                 [(String,[EnrichedEvent])]
+getWeeksEvents tz now events = zip days groupedEvents
+    where
+      days = map (getNDaysAgoDate now) r
+      groupedEvents = map (\n -> filter (isNDaysAgo tz now n) events) r
+      r = [0..6]
 
 dayNumEvents:: TimeZone -> LocalTime -> [EnrichedEvent] -> Int
 dayNumEvents tz now = length . getTodaysEvents tz now
@@ -98,5 +111,19 @@ dayReport tz now geo events = intercalate "\n\n" report
                      todaysEvents
           todaysEvents = getTodaysEvents tz now events
 
+getStats:: [EnrichedEvent] -> String
+getStats events = intercalate "\n"
+                  ["+ " ++ (show . length) visitors ++ " unique visitors.",
+                   "+ " ++ (show . length) events ++ " total events."]
+    where visitors = groupBy ((==) `on` userIpaddress) .
+                     sortBy (compare `on` userIpaddress) $
+                     events
+
 weekReport:: TimeZone -> LocalTime -> GeoDB -> [EnrichedEvent] -> String
-weekReport tz now geo events = "TODO"
+weekReport tz now geo events = intercalate "\n\n" report
+    where report = map (\r -> "# " ++ fst r ++ "\n" ++ snd r) $
+                   ("Total", getStats eventsFlat) : zip dayTitles dayBreakdown
+          dayTitles = map fst eventsGrouped
+          dayBreakdown = map (getStats . snd) eventsGrouped
+          eventsFlat = concat $ map snd eventsGrouped
+          eventsGrouped = getWeeksEvents tz now events
