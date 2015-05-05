@@ -28,7 +28,7 @@ getTodaysEvents:: TimeZone -> LocalTime -> [EnrichedEvent] -> [EnrichedEvent]
 getTodaysEvents tz now = filter $ isNDaysAgo tz now 0
 
 getNDaysAgoDate:: LocalTime -> Integer -> String
-getNDaysAgoDate now n = show (addDays (-n) (localDay now))
+getNDaysAgoDate now n = show $ addDays (-n) $ localDay now
 
 getWeeksEvents:: TimeZone -> LocalTime -> [EnrichedEvent] ->
                  [(String,[EnrichedEvent])]
@@ -125,5 +125,5 @@ weekReport tz now geo events = intercalate "\n\n" report
                    ("Total", getStats eventsFlat) : zip dayTitles dayBreakdown
           dayTitles = map fst eventsGrouped
           dayBreakdown = map (getStats . snd) eventsGrouped
-          eventsFlat = concat $ map snd eventsGrouped
+          eventsFlat = concatMap snd eventsGrouped
           eventsGrouped = getWeeksEvents tz now events
