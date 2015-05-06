@@ -93,15 +93,26 @@ getVisitorInfo geo all@(e1:rest) =
           referrerInfo = if null referrers then []
                          else ["\n+ Referrers:\n", referrers]
 
-dayReport:: TimeZone -> LocalTime -> GeoDB -> [EnrichedEvent] -> String
-dayReport tz now geo events = intercalate "\n\n" report
-    where report = ["# Statistics", stats,
-                    "# Pages", dayPages,
-                    "# Referrers", dayReferrers,
-                    "# Visitors", intercalate "\n\n" visitorInfo]
-          stats = intercalate "\n"
+getStats:: [EnrichedEvent] -> String
+getStats events = intercalate "\n"
                   ["+ " ++ (show . length) visitors ++ " unique visitors.",
-                   "+ " ++ (show . length) todaysEvents ++ " total events."]
+                   "+ " ++ (show . length) events ++ " total events."]
+    where visitors = groupBy ((==) `on` userIpaddress) .
+                     sortBy (compare `on` userIpaddress) $
+                     events
+
+formatSection:: (String,String) -> String
+formatSection (heading,content) = "# " ++ heading ++ "\n" ++ content
+
+formatReport:: [(String,String)] -> String
+formatReport report = intercalate "\n\n" $ map formatSection report
+
+dayReport:: TimeZone -> LocalTime -> GeoDB -> [EnrichedEvent] -> String
+dayReport tz now geo events = formatReport report
+    where report = [("Statistics", getStats todaysEvents),
+                    ("Pages", dayPages),
+                    ("Referrers", dayReferrers),
+                    ("Visitors", intercalate "\n\n" visitorInfo)]
           dayReferrers = sortedEventInfo pageReferrer todaysEvents
           dayPages = sortedEventInfo pageUrl todaysEvents
           visitorInfo = map (getVisitorInfo geo) sortedVisitors
@@ -111,18 +122,9 @@ dayReport tz now geo events = intercalate "\n\n" report
                      todaysEvents
           todaysEvents = getTodaysEvents tz now events
 
-getStats:: [EnrichedEvent] -> String
-getStats events = intercalate "\n"
-                  ["+ " ++ (show . length) visitors ++ " unique visitors.",
-                   "+ " ++ (show . length) events ++ " total events."]
-    where visitors = groupBy ((==) `on` userIpaddress) .
-                     sortBy (compare `on` userIpaddress) $
-                     events
-
 weekReport:: TimeZone -> LocalTime -> GeoDB -> [EnrichedEvent] -> String
-weekReport tz now geo events = intercalate "\n\n" report
-    where report = map (\r -> "# " ++ fst r ++ "\n" ++ snd r) $
-                   ("Total", getStats eventsFlat) : zip dayTitles dayBreakdown
+weekReport tz now geo events = formatReport report
+    where report = ("Total", getStats eventsFlat) : zip dayTitles dayBreakdown
           dayTitles = map fst eventsGrouped
           dayBreakdown = map (getStats . snd) eventsGrouped
           eventsFlat = concatMap snd eventsGrouped
