@@ -26,7 +26,7 @@ getVisitorInfo geo all@(e1:rest) =
           referrerInfo =
               case pageReferrer e1 of
                 "" -> []
-                referrer -> ["+ Referrer:\n", referrer]
+                referrer -> ["+ Referrer: ", referrer, "\n"]
 
 getStats:: [EnrichedEvent] -> String
 getStats events = intercalate "\n"
