@@ -18,14 +18,15 @@ getVisitorInfo geo all@(e1:rest) =
             "+ Number of Visits: ", numVisits, "\n",
             "+ Geo: ", getGeo geo e1, "\n",
             "+ Organization: ", getWhois $ userIpaddress e1, "\n",
-            "+ Timezone: ", osTimezone e1, "\n",
-            "+ Entry Page:\n", pageUrl e1, "\n",
-            "+ Pages:\n", sortedEventInfo pageUrl all, "\n"] ++
-            referrerInfo
-    where numVisits = show . length $ all
-          referrers = sortedEventInfo pageReferrer all
-          referrerInfo = if null referrers then []
-                         else ["\n+ Referrers:\n", referrers]
+            "+ Timezone: ", osTimezone e1, "\n"] ++
+            referrerInfo ++
+            ["+ Pages (Entry first):\n", pagePath]
+    where pagePath = intercalate "\n" $ map (\e -> "  + " ++ pageUrl e) all
+          numVisits = show . length $ all
+          referrerInfo =
+              case pageReferrer e1 of
+                "" -> []
+                referrer -> ["+ Referrer:\n", referrer]
 
 getStats:: [EnrichedEvent] -> String
 getStats events = intercalate "\n"
@@ -47,7 +48,7 @@ dayReport tz now geo events = formatReport report
                     ("Pages", dayPages),
                     ("Referrers", dayReferrers),
                     ("Visitors", intercalate "\n\n" visitorInfo)]
-          dayReferrers = sortedEventInfo pageReferrer todaysEvents
+          dayReferrers = sortedEventInfo pageReferrer $ map head visitors
           dayPages = sortedEventInfo pageUrl todaysEvents
           visitorInfo = map (getVisitorInfo geo) sortedVisitors
           sortedVisitors = sortBy (flip compare `on` length) visitors
