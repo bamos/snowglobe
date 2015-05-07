@@ -1,11 +1,24 @@
 {-# LANGUAGE ScopedTypeVariables, DeriveGeneric #-}
 
-module SnowGlobe.EnrichedEvent where
+module SnowGlobe.EnrichedEvent(EnrichedEvent(..), getEventInfo, getGeo,
+                              getWhois, sortedEventInfo) where
 
 import Data.Csv
+import Data.Function(on)
+import Data.Geolocation.GeoIP(GeoDB, geoLocateByIPAddress)
+import Data.List(groupBy, intercalate, sortBy)
 import GHC.Generics
+import Network.Whois(whois)
+import System.IO.Unsafe(unsafeDupablePerformIO)
+import Text.Regex.Posix
 
--- Event type for version 0.2.1 of snowplow-kinesis-enrich.
+import qualified Data.Geolocation.GeoIP as G
+import qualified Data.ByteString.Char8 as B
+
+-- This is a subset of Snowplow's EnrichedEvent object that's compatible
+-- with version 0.2.1 of snowplow-kinesis-enrich.
+-- Snowplow's EnrichedEvent object can be found at:
+-- https://github.com/snowplow/snowplow/blob/master/3-enrich/scala-common-enrich/src/main/scala/com.snowplowanalytics.snowplow.enrich/common/outputs/EnrichedEvent.scala
 data EnrichedEvent = EnrichedEvent {
 -- The application (site, game, app etc) this event belongs to, and the tracker platform
      appId:: String
@@ -169,3 +182,41 @@ data EnrichedEvent = EnrichedEvent {
 } deriving (Generic,Show)
 
 instance FromRecord EnrichedEvent
+
+getEventInfo:: (EnrichedEvent->String) -> [EnrichedEvent] -> String
+getEventInfo field all@(e1:rest) =
+    concat ["  [", show numHits, " ", hits, "]: ", url]
+    where numHits = length all
+          hits = if numHits == 1 then "Hit" else "Hits"
+          url = field e1
+
+sortedEventInfo:: (EnrichedEvent->String) -> [EnrichedEvent] -> String
+sortedEventInfo field events =
+    intercalate "\n" . map (getEventInfo field) $ fields
+    where fields = sortBy (flip compare `on` length) groupedFields
+          groupedFields = groupBy ((==) `on` field) .
+                          sortBy (compare `on` field) .
+                          filter (not . null . field) $
+                          events
+
+getGeo:: GeoDB -> EnrichedEvent -> String
+getGeo geo event =
+    case geoM of
+      Nothing -> "Not found"
+      Just geo ->
+          case (B.unpack . G.geoCity $ geo,
+                B.unpack . G.geoCountryName $ geo) of
+            ("","") -> "Not found"
+            ("",country) -> country
+            (city, country) -> city ++ ", " ++ country
+    where geoM = unsafeDupablePerformIO . geoLocateByIPAddress geo $ ip
+          ip = B.pack . userIpaddress $ event
+
+getWhois:: String -> String
+getWhois ipAddr =
+    case m of
+      (Nothing,_) -> "Not found"
+      (Just whoisStr,_) ->
+          if null r then "Not found" else head r !! 1
+          where r = whoisStr =~ "Organization: *(.*)" :: [[String]]
+    where m = unsafeDupablePerformIO . whois $ ipAddr
