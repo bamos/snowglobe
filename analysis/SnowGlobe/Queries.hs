@@ -19,6 +19,7 @@ getVisitorInfo geo all@(e1:rest) =
             "+ Geo: ", getGeo geo e1, "\n",
             "+ Organization: ", getWhois $ userIpaddress e1, "\n",
             "+ Timezone: ", osTimezone e1, "\n",
+            "+ Entry Page:\n", pageUrl e1, "\n",
             "+ Pages:\n", sortedEventInfo pageUrl all, "\n"] ++
             referrerInfo
     where numVisits = show . length $ all
