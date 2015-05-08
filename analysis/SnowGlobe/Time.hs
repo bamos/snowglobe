@@ -1,3 +1,8 @@
+-- Time-based helper functions for EnrichedEvents.
+--
+-- Brandon Amos <http://bamos.github.io>
+-- 2015.05.08
+
 module SnowGlobe.Time(parse, getTodaysEvents, getWeeksEvents) where
 
 import Data.Time(Day, LocalTime(..), TimeZone, defaultTimeLocale,
