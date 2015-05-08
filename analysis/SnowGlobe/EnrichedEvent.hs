@@ -32,25 +32,26 @@ import qualified Data.ByteString.Char8 as B
 getLocation:: GeoDB -> EnrichedEvent -> String
 getLocation geo event =
     case geoM of
-      Nothing -> failureMessage
+      Nothing -> failureMsg
       Just geo ->
           case (B.unpack . G.geoCity $ geo,
                 B.unpack . G.geoCountryName $ geo) of
-            ("","") -> failureMessage
+            ("","") -> failureMsg
             ("",country) -> country
             (city, country) -> city ++ ", " ++ country
     where geoM = unsafeDupablePerformIO . geoLocateByIPAddress geo $ ip
           ip = B.pack . userIpaddress $ event
-          failureMessage = "Not found"
+          failureMsg = "Not found"
 
 getOrganization:: String -> String
 getOrganization ipAddr =
     case m of
-      (Nothing,_) -> "Not found"
+      (Nothing,_) -> failureMsg
       (Just whoisStr,_) ->
-          if null r then "Not found" else head r !! 1
+          if null r then failureMsg else head r !! 1
           where r = whoisStr =~ "Organization: *(.*)" :: [[String]]
     where m = unsafeDupablePerformIO . whois $ ipAddr
+          failureMsg = "Not found"
 
 data EnrichedEvent = EnrichedEvent {
     -- The application (site, game, app etc) this event belongs to, and
