@@ -52,7 +52,7 @@ analytics args = do
           "WeekReport" -> putStrLn $ weekReport tz now geo events
           m -> putStrLn $ "Error: Unexpected mode: " ++ m
         where events = filter isMine $ V.toList eventsV
-              isMine e = any (\page -> isInfixOf page $ pageUrl e) whitelist
+              isMine e = any (\domain -> isInfixOf domain $ pageUrl e) whitelist
               whitelist = ["bamos.github.io", "derecho.elijah"]
 
 main :: IO ()
