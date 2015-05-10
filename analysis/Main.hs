@@ -9,6 +9,7 @@ import Data.Char(ord)
 import Data.Csv (HasHeader(NoHeader), decodeWith, decDelimiter,
                  defaultDecodeOptions)
 import Data.Geolocation.GeoIP(memory_cache, openGeoDB)
+import Data.List(isInfixOf)
 import Data.Time(getCurrentTime, getCurrentTimeZone, utcToLocalTime)
 
 import qualified Data.ByteString.Lazy as BL
@@ -50,7 +51,9 @@ analytics args = do
           "DayReport" -> putStrLn $ dayReport tz now geo events
           "WeekReport" -> putStrLn $ weekReport tz now geo events
           m -> putStrLn $ "Error: Unexpected mode: " ++ m
-        where events = V.toList eventsV
+        where events = filter isMine $ V.toList eventsV
+              isMine e = any (\page -> isInfixOf page $ pageUrl e) whitelist
+              whitelist = ["bamos.github.io", "derecho.elijah"]
 
 main :: IO ()
 main = execParser opts >>= analytics
