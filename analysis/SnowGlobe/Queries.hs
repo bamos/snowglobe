@@ -60,6 +60,7 @@ getVisitorInfo:: GeoDB -> [EnrichedEvent] -> String
 getVisitorInfo geo all@(e1:rest) =
     concat $ ["## ", userIpaddress e1, "\n",
             "+ Number of Visits: ", numVisits, "\n",
+            "+ OS: ", osName e1, "\n",
             "+ Location: ", getLocation geo e1, "\n",
             "+ Organization: ", getOrganization $ userIpaddress e1, "\n",
             "+ Timezone: ", osTimezone e1, "\n"] ++
