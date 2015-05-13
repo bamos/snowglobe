@@ -7,7 +7,7 @@ version:             0.1.0.0
 -- description:
 homepage:            http://github.com/bamos/snowglobe
 license:             Apache-2.0
-license-file:        LICENSE
+license-file:        LICENSE-2.0.txt
 author:              Brandon Amos
 maintainer:          bamos@cs.cmu.edu
 -- copyright:
