@@ -5,6 +5,7 @@
 
 module SnowGlobe.Time(parse, getTodaysEvents, getWeeksEvents) where
 
+import Control.Applicative
 import Data.Time(Day, LocalTime(..), TimeZone, defaultTimeLocale,
                 getCurrentTime, getCurrentTimeZone, parseTimeM,
                 utcToLocalTime)
