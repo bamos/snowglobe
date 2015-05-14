@@ -14,7 +14,18 @@ to a tab separated file.
 
 SnowGlobe uniquely provides Haskell-driven analytics on the data.
 
-+ **Crafted by [Brandon Amos](http://bamos.github.io).**
+**Crafted by [Brandon Amos](http://bamos.github.io).**
+
+---
+
+I wanted to create SnowGlobe in early 2014 when
+I wrote the initial versions of Snowplow's collector
+and enricher, and finally created an initial version in
+May 2015.
+See [here](https://github.com/snowplow/snowplow/tree/0d2b4b76cbd9a415cb658dc0e3ff56bcc27e2c81/2-collectors/scala-stream-collector)
+and [here](https://github.com/snowplow/snowplow/tree/6a15fed399be49513b6c46f44442d286ebe6832b/3-enrich/scala-kinesis-enrich)
+for historic snapshots of my initial versions of the collector
+and enricher, and they've been greatly improved since.
 
 # Motivation: Why create SnowGlobe?
 I've used [Google Analytics](http://www.google.com/analytics/),
