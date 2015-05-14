@@ -232,8 +232,6 @@ Layout stats {
 }
 ```
 
-![](https://raw.githubusercontent.com/bamos/snowglobe/master/images/lcd-display.jpg)
-
 ## Recurring Email Reports
 The `DayReport` mode outputs the report in plaintext to stdout.
 Pipe this output to your favorite command-line mailer
@@ -248,8 +246,6 @@ The following `cron` entry calls
 59 23 * * * /home/bamos/repos/snowglobe/scripts/analytics-daily-report.sh
 59 23 * * 0 /home/bamos/repos/snowglobe/scripts/analytics-weekly-report.sh
 ```
-
-![](https://raw.githubusercontent.com/bamos/snowglobe/master/images/sample-report.png)
 
 ## Unimplemented Ideas
 Please comment on the issues or contact
