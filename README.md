@@ -233,9 +233,6 @@ The following `cron` entry calls
 
 ![](https://raw.githubusercontent.com/bamos/snowglobe/master/images/sample-report.png)
 
-## Modifying the code
-I'm happy for contributions and to see and link to what other do with SnowGlobe.
-
 ## Unimplemented Ideas
 Please comment on the issues or contact
 [Brandon Amos](http://bamos.github.io)
