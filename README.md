@@ -33,7 +33,7 @@ My ongoing goals in building SnowGlobe are:
 ### Real-time summary
 Piping a daily summary to my LCD display with SnowGlobe works well.
 I've replaced my actual stats with the string `NNNN | MMM`, which
-represent that I've had `NNNN` total page views by `MMM` visitors.
+represents that I've had `NNNN` total page views by `MMM` visitors.
 If you're curious, the other information on the device are the
 number of tasks I have (for today, tomorrow, and the next day),
 and the temperature and amount of GPU memory I'm currently
