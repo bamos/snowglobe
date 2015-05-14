@@ -247,6 +247,8 @@ if you're interested in helping.
   Finish weekly, monthly, and yearly reports.
 + ([#8](https://github.com/bamos/snowglobe/issues/8))
   Intelligently parse referrers so they're easier to glance at.
++ ([#9](https://github.com/bamos/snowglobe/issues/9))
+  Add optional arguments to the modes to retrieve historical analytics.
 
 # Licensing
 SnowGlobe portions copyright 2014-2015 Brandon Amos under the
