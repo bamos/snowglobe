@@ -143,7 +143,8 @@ parses the raw events file into an
 and contains features of SnowPlow's
 [EnrichedEvent.scala](https://github.com/snowplow/snowplow/blob/master/3-enrich/scala-common-enrich/src/main/scala/com.snowplowanalytics.snowplow.enrich/common/outputs/EnrichedEvent.scala).
 
-`EnrichedEvent.hs` also further enriched events by providing
+[EnrichedEvent.hs](https://github.com/bamos/snowglobe/blob/master/analysis/SnowGlobe/EnrichedEvent.hs),
+further enriches events by providing
 `getLocation` and `getOrganization` functions,
 which use
 [hs-GeoIP](https://github.com/ozataman/hs-GeoIP)
