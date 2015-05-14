@@ -7,10 +7,10 @@ for small-scale and personal websites.
 
 SnowGlobe integrates components from the
 [Snowplow analytics framework][snowplow] to achieve this.
-The [JavaScript tracker][js-tracker] is used with the
-[Scala collector][scala-collector] and [Scala enrichment][scala-enrichment]
-to output [Snowplow enriched events][enriched-events]
-as a tab separated file.
+The [JavaScript tracker][js-tracker] pipes into the
+[Scala collector][scala-collector] and [Scala enricher][scala-enrichment]
+and outputs [Snowplow enriched events][enriched-events]
+to a tab separated file.
 
 SnowGlobe uniquely provides Haskell-driven analytics on the data.
 
@@ -31,7 +31,7 @@ My ongoing goals in building SnowGlobe are:
 
 ## Progress
 ### Real-time summary
-Piping a daily summary to my LCD display with SnowGlobe is working well.
+Piping a daily summary to my LCD display with SnowGlobe works well.
 I've replaced my actual stats with the string `NNNN | MMM`, which
 represent that I've had `NNNN` total page views by `MMM` visitors.
 If you're curious, the other information on the device are the
@@ -59,12 +59,12 @@ More information on setting these reports up below.
 
 # Collecting and storing events to TSV files
 On the server, start the collector and enricher with the following
-instructions, which can be done in a detached screen or tmux
-session, or run by an init daemon.
+instructions.
+For persistent collection, use an init daemon (preferred),
+or a detached screen or tmux session.
 
 + `conf/collector.conf` and `conf/enrich.conf` contain sensible default
-   configurations for Snowplow's collector and enricher,
-   but can be modified as desired.
+   configurations for Snowplow's collector and enricher.
 + `scripts/start-collect-enrich.sh` will start Snowplow's collector on port
   8080 to pipe Base 64 serialized Thrift raw event output to Snowplow's
   Scala enricher.
@@ -77,9 +77,9 @@ session, or run by an init daemon.
   to run `start-collect-enrich.sh`.
   Copy the config with `sudo cp sample/snowglobe.service /etc/systemd/system/`
   and reload the units with `sudo systemctl daemon-reload`.
-  The config cannot be symlinked due to
-  [this](https://bugzilla.redhat.com/show_bug.cgi?id=1014311) systemd behavior.
-  The service can be started immediately with `sudo systemctl start` and
+  Do not use a symlink because of
+  [this](https://bugzilla.redhat.com/show_bug.cgi?id=1014311) systemd behavior/bug.
+  Start the service with `sudo systemctl start` and
   run on boot with `sudo systemctl enable`.
 
 # Adding JavaScript tags to your webpages
@@ -118,8 +118,8 @@ parses command-line arguments
 and
 [cassava](https://github.com/tibbe/cassava)
 parses the raw events file into an
-`EnrichedEvent`, which is defined in
-[EnrichedEvent.hs](https://github.com/bamos/snowglobe/blob/master/analysis/SnowGlobe/EnrichedEvent.hs)
+`EnrichedEvent`, defined in
+[EnrichedEvent.hs](https://github.com/bamos/snowglobe/blob/master/analysis/SnowGlobe/EnrichedEvent.hs),
 and contains features of SnowPlow's
 [EnrichedEvent.scala](https://github.com/snowplow/snowplow/blob/master/3-enrich/scala-common-enrich/src/main/scala/com.snowplowanalytics.snowplow.enrich/common/outputs/EnrichedEvent.scala).
 
@@ -129,9 +129,8 @@ which use
 [hs-GeoIP](https://github.com/ozataman/hs-GeoIP)
 and
 [whois-hs](https://github.com/relrod/whois-hs).
-This information should be provided by the SnowPlow
-collection and enrichment process.
-There's likely a subtle bug in my configuration
+SnowPlow's enricher should add this information to events,
+but there's a subtle bug in my configuration
 or the software that I'll further track
 down in issue
 [#4](https://github.com/bamos/snowglobe/issues/4)
@@ -141,7 +140,7 @@ sometime.
 groups, filters, and extracts information from the events.
 
 ## Building
-To build the analytics portion, first install `GHC`, the
+To build the analytics binary, first install `GHC`, the
 Glasgow Haskell Compiler, and `cabal`, a build system
 and library database:
   + OSX: `brew install ghc cabal-install`
@@ -151,7 +150,7 @@ and library database:
 Next, `cd` into the `snowglobe` directory and
 install the Haskell dependencies and build
 the code with: `cabal install`.
-The binary `snowglobe-analytics` will now be located
+The binary `snowglobe-analytics` is now
 in `~/.cabal/bin/snowglobe-analytics`.
 You can add `cabal`s bin directory to your `PATH` or use
 the full path.
@@ -189,7 +188,7 @@ I pipe this output to my LCD display with
 by defining the following widget in `/etc/lcd4linux.conf`.
 LCD4Linux's
 [exec documentation](https://lcd4linux.bulix.org/wiki/plugin_exec)
-says `exec` should be considered as a last resort,
+says to use `exec` as a last resort,
 but the following is working well for me so far.
 
 ```
@@ -244,7 +243,7 @@ if you're interested in helping.
   Visualizations
 + ([#6](https://github.com/bamos/snowglobe/issues/6))
   More streaming analytics, possibly visualizations,
-  since `events.tsv` is updated in real-time.
+  since `events.tsv` updates in real-time.
 + ([#7](https://github.com/bamos/snowglobe/issues/7))
   Finish weekly, monthly, and yearly reports.
 + ([#8](https://github.com/bamos/snowglobe/issues/8))
