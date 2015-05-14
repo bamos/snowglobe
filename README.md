@@ -14,6 +14,8 @@ to a tab separated file.
 
 SnowGlobe uniquely provides Haskell-driven analytics on the data.
 
++ **Crafted by [Brandon Amos](http://bamos.github.io).**
+
 # Motivation: Why create SnowGlobe?
 I've used [Google Analytics](http://www.google.com/analytics/),
 [Piwik](http://piwik.org/), and [Clicky](https://clicky.com)
