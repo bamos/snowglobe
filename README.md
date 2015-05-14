@@ -46,10 +46,10 @@ My ongoing goals in building SnowGlobe are to:
 ## Progress
 ### Real-time summary on an LCD display
 Somebody in my research group gave me a small LCD display
-a few weeks ago and said that he couldn't find any useful
-information to put on it,
-This with the accumulation of my other goals
-inspired me to create SnowGlobe.
+a few weeks ago (in May 2015) and said that he couldn't
+find any useful information to put on it,
+This, along with my other goals, inspired me to finally
+create SnowGlobe.
 
 Piping a daily summary to my LCD display with SnowGlobe works well.
 I've replaced my actual stats with the string `NNNN | MMM`, which
