@@ -32,7 +32,7 @@ for my personal website analytics over the last 3 years.
 These are great systems and I still use some of them for
 the web interfaces and other analytics.
 However, I enjoy hacking on the systems I use and
-felt limited by these other systems.
+felt limited.
 
 My ongoing goals in building SnowGlobe are to:
 
