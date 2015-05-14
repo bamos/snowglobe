@@ -16,8 +16,6 @@ SnowGlobe uniquely provides Haskell-driven analytics on the data.
 
 **Crafted by [Brandon Amos](http://bamos.github.io).**
 
----
-
 > I wanted to create SnowGlobe in early 2014 when
 I wrote the initial versions of Snowplow's collector
 and enricher.
@@ -31,7 +29,7 @@ I finally built SnowGlobe in May 2015.
 I've used [Google Analytics](http://www.google.com/analytics/),
 [Piwik](http://piwik.org/), and [Clicky](https://clicky.com)
 for my personal website analytics over the last 3 years.
-These are great systems I still use some of them for
+These are great systems and I still use some of them for
 the web interfaces and other analytics.
 However, I enjoy hacking on the systems I use and
 felt limited by these other systems.
