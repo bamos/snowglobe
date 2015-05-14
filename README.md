@@ -25,14 +25,21 @@ the web interfaces and other analytics.
 However, I enjoy hacking on the systems I use and
 felt limited by these other systems.
 
-My ongoing goals in building SnowGlobe are:
+My ongoing goals in building SnowGlobe are to:
 
 1. Pipe a short daily summary of my real-time analytics to my LCD display.
 2. Email me daily, weekly, monthly, and yearly reports with
    the information I want.
+3. Create interesting real-time visualizations (not started)
 
 ## Progress
-### Real-time summary
+### Real-time summary on an LCD display
+Somebody in my research group gave me a small LCD display
+a few weeks ago and said that he couldn't find any useful
+information to put on it,
+This with the accumulation of my other goals
+inspired me to create SnowGlobe.
+
 Piping a daily summary to my LCD display with SnowGlobe works well.
 I've replaced my actual stats with the string `NNNN | MMM`, which
 represents that I've had `NNNN` total page views by `MMM` visitors.
