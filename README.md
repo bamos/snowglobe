@@ -23,8 +23,8 @@ I wrote the initial versions of Snowplow's collector
 and enricher.
 See [here](https://github.com/snowplow/snowplow/tree/0d2b4b76cbd9a415cb658dc0e3ff56bcc27e2c81/2-collectors/scala-stream-collector)
 and [here](https://github.com/snowplow/snowplow/tree/6a15fed399be49513b6c46f44442d286ebe6832b/3-enrich/scala-kinesis-enrich)
-for historic snapshots of my initial versions.
-They've been greatly improved since.
+for historic snapshots of these projects.
+They've been greatly improved since, and
 I finally built SnowGlobe in May 2015.
 
 # Motivation: Why create SnowGlobe?
