@@ -22,14 +22,14 @@ executable snowglobe-analysis
                       SnowGlobe.Time,
                       SnowGlobe.Queries
   -- other-extensions:
-  build-depends:       base >=4.7,
-                       bytestring >= 0.10,
-                       cassava >= 0.4,
-                       hs-GeoIP >= 0.3,
-                       optparse-applicative >= 0.11,
-                       regex-posix >= 0.95,
-                       time >= 1.5,
-                       vector >= 0.10,
-                       whois >= 1.2.2
+  build-depends:       base >=4.7 && <5,
+                       bytestring == 0.10.*,
+                       cassava == 0.4.*,
+                       hs-GeoIP == 0.3.*,
+                       optparse-applicative == 0.11.*,
+                       regex-posix == 0.95.*,
+                       time == 1.5.*,
+                       vector == 0.10.*,
+                       whois == 1.2.*
   hs-source-dirs:      analysis
   default-language:    Haskell2010
