@@ -8,6 +8,7 @@ JAVA_VER=$(java -version 2>&1 | \
   sed 's/java version "\(.*\)\.\(.*\)\..*"/\1\2/; 1q')
 [ "$JAVA_VER" -gt 16 ] || die "Java version must be greater than 1.6."
 
+mkdir -p ../data
 cd ../data
 
 stdbuf -i0 -o0 -e0 \
