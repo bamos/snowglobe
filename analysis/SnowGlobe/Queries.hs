@@ -9,7 +9,8 @@ import Data.Function(on)
 import Data.List(group, groupBy, intercalate, sort, sortBy)
 import Data.Time(LocalTime, TimeZone)
 
-import SnowGlobe.EnrichedEvent(EnrichedEvent(..), getOrganization)
+import SnowGlobe.EnrichedEvent(EnrichedEvent(..), getOrganization,
+                               prettyReferrer)
 import SnowGlobe.Time(parse, getTodaysEvents, getWeeksEvents)
 
 -- Summarize today's events so far with the number of total
@@ -29,7 +30,10 @@ dayReport tz now events = formatReport report
                     ("Pages", dayPages),
                     ("Referrers", dayReferrers),
                     ("Visitors", intercalate "\n\n" visitorInfo)]
-          dayReferrers = sortedEventInfo pageReferrer $ map head visitors
+          dayReferrers = sortedEventInfo prettyReferrerStr $ map head visitors
+          prettyReferrerStr e = case prettyReferrer e of
+            Nothing -> ""
+            Just r -> r
           dayPages = sortedEventInfo pageUrl todaysEvents
           visitorInfo = map getVisitorInfo sortedVisitors
           sortedVisitors = sortBy (flip compare `on` length) visitors
@@ -71,9 +75,9 @@ getVisitorInfo all@(e1:rest) =
     where pagePath = intercalate "\n" $ map (\e -> "  + " ++ pageUrl e) all
           numVisits = show . length $ all
           referrerInfo =
-              case pageReferrer e1 of
-                "" -> []
-                referrer -> ["+ Referrer: ", referrer, "\n"]
+              case prettyReferrer e1 of
+                Nothing -> []
+                Just referrer -> ["+ Referrer: ", referrer, "\n"]
 
 -- Reports are represented as a list of (heading, section) tuples.
 -- Format them in a Markdown-esque style by marking headings with '#'.

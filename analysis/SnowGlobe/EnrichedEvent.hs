@@ -14,7 +14,8 @@
 
 {-# LANGUAGE ScopedTypeVariables,DeriveGeneric #-}
 
-module SnowGlobe.EnrichedEvent(EnrichedEvent(..), getOrganization) where
+module SnowGlobe.EnrichedEvent(EnrichedEvent(..), getOrganization,
+                               prettyReferrer) where
 
 import Data.Csv
 import Data.Function(on)
@@ -35,6 +36,17 @@ getOrganization ipAddr =
           where r = whoisStr =~ "Organization: *(.*)" :: [[String]]
     where m = unsafeDupablePerformIO . whois $ ipAddr
           failureMsg = "Not found"
+
+prettyReferrer:: EnrichedEvent -> Maybe String
+prettyReferrer e =
+    case (pageReferrer e, refrMedium e, refrSource e, refrTerm e) of
+      ("", _, _, _) -> Nothing
+      (url, "search", "", term) -> Just $ concat [url, " [TODO: prettyReferrer: \
+                                                       \empty refrSource?]"]
+      (url, "search", source, "") -> Just $ concat [source, " [Secure Search]"]
+      (url, "search", source, term) -> Just $ concat [source, " Search - ", term]
+      (url, med, source, term) -> Just $ "TODO: prettyReferrer: " ++
+                                    intercalate " - " [url, med, source, term]
 
 data EnrichedEvent = EnrichedEvent {
     -- The application (site,game,app etc) this event belongs to,and
