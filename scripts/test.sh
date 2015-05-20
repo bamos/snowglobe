@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 set -x -e # Output commands being executed and propogate errors.
 cd $(dirname $0)/.. # cd into the snowglobe
