@@ -5,22 +5,22 @@
 --
 -- This module also provides functions to extract geographic
 -- and WHOIS information from the events.
--- This functionality should be in the event objects, but
+-- This functionality should be in the event objects,but
 -- SnowGlobe possibly misconfigures the enricher that causes
 -- them to not be added.
 --
 -- Brandon Amos <http://bamos.github.io>
 -- 2015.05.08
 
-{-# LANGUAGE ScopedTypeVariables, DeriveGeneric #-}
+{-# LANGUAGE ScopedTypeVariables,DeriveGeneric #-}
 
 module SnowGlobe.EnrichedEvent(EnrichedEvent(..),
-                               getLocation, getOrganization) where
+                               getLocation,getOrganization) where
 
 import Data.Csv
 import Data.Function(on)
-import Data.Geolocation.GeoIP(GeoDB, geoLocateByIPAddress)
-import Data.List(groupBy, intercalate, sortBy)
+import Data.Geolocation.GeoIP(GeoDB,geoLocateByIPAddress)
+import Data.List(groupBy,intercalate,sortBy)
 import GHC.Generics
 import Network.Whois(whois)
 import System.IO.Unsafe(unsafeDupablePerformIO)
@@ -38,7 +38,7 @@ getLocation geo event =
                 B.unpack . G.geoCountryName $ geo) of
             ("","") -> failureMsg
             ("",country) -> country
-            (city, country) -> city ++ ", " ++ country
+            (city,country) -> city ++ "," ++ country
     where geoM = unsafeDupablePerformIO . geoLocateByIPAddress geo $ ip
           ip = B.pack . userIpaddress $ event
           failureMsg = "Not found"
@@ -54,7 +54,7 @@ getOrganization ipAddr =
           failureMsg = "Not found"
 
 data EnrichedEvent = EnrichedEvent {
-    -- The application (site, game, app etc) this event belongs to, and
+    -- The application (site,game,app etc) this event belongs to,and
     -- the tracker platform
      appId:: String
     ,platform:: String
@@ -214,6 +214,41 @@ data EnrichedEvent = EnrichedEvent {
     ,docCharset:: String
     ,docWidth:: Maybe Int
     ,docHeight:: Maybe Int
+
+    -- Currency
+    ,tr_currency:: String
+    ,tr_total_base:: String
+    ,tr_tax_base:: String
+    ,tr_shipping_base:: String
+    ,ti_currency:: String
+    ,ti_price_base:: String
+    ,base_currency:: String
+
+    -- Geolocation
+    ,geo_timezone:: String
+
+    -- Click ID
+    ,mkt_clickid:: String
+    ,mkt_network:: String
+
+    -- ETL tags
+    ,etl_tags:: String
+
+    -- Time event was sent
+    ,dvce_sent_tstamp:: String
+
+    -- Referer
+    ,refr_domain_userid:: String
+    ,refr_dvce_tstamp:: String
+
+    -- Derived contexts
+    ,derived_contexts:: String
+
+    -- Session ID
+    ,domain_sessionid:: String
+
+    -- Derived timestamp
+    ,derived_tstamp:: String
 } deriving (Generic,Show)
 
 instance FromRecord EnrichedEvent

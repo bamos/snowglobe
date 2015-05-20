@@ -4,22 +4,18 @@
 
 cd $(dirname $0) # cd into the script's directory.
 source env.sh
-set -x # Show the commands being executed.
+set -x -e # Show the commands being executed and fail if a subprocess fails.
 
 cd ..
-mkdir -p vendor
+rm -rf vendor
+mkdir vendor
 cd vendor
 
-# Download all files if they don't already exist.
-[[ -f $COL ]] || wget $CF/$COL_DIR/$COL
-chmod a+x $COL
-[[ -f $ENR ]] || wget $CF/$ENR_DIR/$ENR
-chmod a+x $ENR
-if [[ ! -f $SP ]]; then
-  wget $CF_2/$SP -O $SP.gz
-  gunzip $SP.gz
-fi
-if [[ ! -f GeoLiteCity.dat ]]; then
-  [[ -f GeoLiteCity.dat.gz ]] || wget $GL
-  gunzip GeoLiteCity.dat.gz
-fi
+wget $RELEASE_ZIP
+unzip $(basename $RELEASE_ZIP)
+rm $(basename $RELEASE_ZIP)
+
+wget $JS_TRACKER
+
+wget $GL
+gunzip $(basename $GL)

@@ -1,8 +1,6 @@
-snowplow-kinesis-enrich-*
-snowplow-stream-collector-*
-sp.js
-GeoLiteCity.dat
 *.out
 *.tsv
 
+data
 dist
+vendor

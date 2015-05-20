@@ -6,15 +6,10 @@
 # for easier access in the other scripts.
 
 # Snowplow Scala collector and enricher JARs.
-CF=http://d2io1hx8u877l0.cloudfront.net
-COL_DIR=2-collectors/scala-stream-collector
-COL=snowplow-stream-collector-0.2.0
-ENR_DIR=3-enrich/scala-kinesis-enrich
-ENR=snowplow-kinesis-enrich-0.2.1
+RELEASE_ZIP=http://dl.bintray.com/snowplow/snowplow-generic/snowplow_kinesis_r65_scarlet_rosefinch.zip
 
 # GeoLiteCity database.
 GL=http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz
 
 # Snowplow JavaScript tracker.
-CF_2=http://d1fc8wv8zag5ca.cloudfront.net/1
-SP=sp.js
+JS_TRACKER=http://d1fc8wv8zag5ca.cloudfront.net/2.4.2/sp.js
