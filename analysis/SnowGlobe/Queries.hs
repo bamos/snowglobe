@@ -7,6 +7,7 @@ module SnowGlobe.Queries(daySummary, dayReport, weekReport) where
 
 import Data.Function(on)
 import Data.List(group, groupBy, intercalate, sort, sortBy)
+import Data.Maybe(fromMaybe)
 import Data.Time(LocalTime, TimeZone)
 
 import SnowGlobe.EnrichedEvent(EnrichedEvent(..), getOrganization,
@@ -31,9 +32,7 @@ dayReport tz now events = formatReport report
                     ("Referrers", dayReferrers),
                     ("Visitors", intercalate "\n\n" visitorInfo)]
           dayReferrers = sortedEventInfo prettyReferrerStr $ map head visitors
-          prettyReferrerStr e = case prettyReferrer e of
-            Nothing -> ""
-            Just r -> r
+          prettyReferrerStr = (fromMaybe "") . prettyReferrer
           dayPages = sortedEventInfo pageUrl todaysEvents
           visitorInfo = map getVisitorInfo sortedVisitors
           sortedVisitors = sortBy (flip compare `on` length) visitors
