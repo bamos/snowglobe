@@ -6,3 +6,4 @@ before_install:
 script:
   - cabal build
   - hlint .
+  - scripts/test.sh
