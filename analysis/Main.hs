@@ -8,7 +8,6 @@
 import Data.Char(ord)
 import Data.Csv (HasHeader(NoHeader), decodeWith, decDelimiter,
                  defaultDecodeOptions)
-import Data.Geolocation.GeoIP(memory_cache, openGeoDB)
 import Data.List(isInfixOf)
 import Data.Time(getCurrentTime, getCurrentTimeZone, utcToLocalTime)
 
@@ -21,7 +20,7 @@ import SnowGlobe.EnrichedEvent
 import SnowGlobe.Queries(daySummary, dayReport, weekReport)
 
 data Args = Args
-    { events, geoDB :: String
+    { events :: String
     , mode :: Mode
     } deriving Show
 
@@ -30,8 +29,6 @@ args :: Parser Args
 args = Args
        <$> strOption (long "events" <> metavar "FILE" <>
                       help "Location of events.tsv" )
-       <*> strOption (long "geoDB" <> metavar "FILE" <>
-                      help "Location of GeoLiteCity.dat" )
        <*> modeParser
 
 data Mode
@@ -64,14 +61,13 @@ run args = do
   rawEvents <- BL.readFile $ events args
   tz <- getCurrentTimeZone
   now <- utcToLocalTime tz <$> getCurrentTime
-  geo <- openGeoDB memory_cache $ geoDB args
   case parseEvents rawEvents of
     Left err -> putStrLn err
     Right eventsV ->
         case mode args of
           DaySummary -> putStrLn $ daySummary tz now events
-          DayReport -> putStrLn $ dayReport tz now geo events
-          WeekReport -> putStrLn $ weekReport tz now geo events
+          DayReport -> putStrLn $ dayReport tz now events
+          WeekReport -> putStrLn $ weekReport tz now events
         where events = filter isMine $ V.toList eventsV
               isMine e = any (\domain -> isInfixOf domain $ pageUrl e) whitelist
               whitelist = ["bamos.github.io", "derecho.elijah"]

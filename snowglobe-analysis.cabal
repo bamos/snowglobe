@@ -25,7 +25,6 @@ executable snowglobe-analysis
   build-depends:       base >=4.7 && <5,
                        bytestring == 0.10.*,
                        cassava == 0.4.*,
-                       hs-GeoIP == 0.3.*,
                        optparse-applicative == 0.11.*,
                        regex-posix == 0.95.*,
                        time == 1.5.*,

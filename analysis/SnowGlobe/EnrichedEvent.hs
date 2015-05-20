@@ -14,34 +14,17 @@
 
 {-# LANGUAGE ScopedTypeVariables,DeriveGeneric #-}
 
-module SnowGlobe.EnrichedEvent(EnrichedEvent(..),
-                               getLocation,getOrganization) where
+module SnowGlobe.EnrichedEvent(EnrichedEvent(..), getOrganization) where
 
 import Data.Csv
 import Data.Function(on)
-import Data.Geolocation.GeoIP(GeoDB,geoLocateByIPAddress)
 import Data.List(groupBy,intercalate,sortBy)
 import GHC.Generics
 import Network.Whois(whois)
 import System.IO.Unsafe(unsafeDupablePerformIO)
 import Text.Regex.Posix
 
-import qualified Data.Geolocation.GeoIP as G
 import qualified Data.ByteString.Char8 as B
-
-getLocation:: GeoDB -> EnrichedEvent -> String
-getLocation geo event =
-    case geoM of
-      Nothing -> failureMsg
-      Just geo ->
-          case (B.unpack . G.geoCity $ geo,
-                B.unpack . G.geoCountryName $ geo) of
-            ("","") -> failureMsg
-            ("",country) -> country
-            (city,country) -> city ++ "," ++ country
-    where geoM = unsafeDupablePerformIO . geoLocateByIPAddress geo $ ip
-          ip = B.pack . userIpaddress $ event
-          failureMsg = "Not found"
 
 getOrganization:: String -> String
 getOrganization ipAddr =
