@@ -7,6 +7,6 @@ cd $(dirname $0)/.. # cd into the snowglobe
 ./scripts/start-collect-enrich.sh &
 ./dist/build/snowglobe-analysis/snowglobe-analysis \
   --events data/events.tsv \
-  --mode DayReport
+  DayReport
 
 # TODO: Kill collecter and enricher subprocess
