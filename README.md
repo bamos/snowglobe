@@ -182,12 +182,11 @@ the full path.
 $ snowglobe-analytics
 SnowGlobe Analytics
 
-Usage: snowglobe-analysis --events FILE --geoDB FILE COMMAND
+Usage: snowglobe-analysis --events FILE COMMAND
 
 Available options:
 -h,--help                Show this help text
 --events FILE            Location of events.tsv
---geoDB FILE             Location of GeoLiteCity.dat
 
 Available commands:
 DaySummary               Print a concise summary for the current day.
@@ -200,7 +199,7 @@ Using `snowglobe-analytics` in `DaySummary` mode on the command
 line outputs the following, showing `NNNN` total page views by `MMM` visitors.
 
 ```
-$ snowglobe-analysis --geoDB /dev/null --events data/events.tsv DaySummary
+$ snowglobe-analysis --events data/events.tsv DaySummary
 NNNN | MMM
 ```
 
@@ -215,7 +214,7 @@ but the following is working well for me so far.
 ```
 Widget Hits {
     class 'Text'
-    expression exec('su bamos -c "/home/bamos/.cabal/bin/snowglobe-analysis --geoDB /dev/null --events /home/bamos/repos/snowglobe/data/events.tsv DaySummary"',10000)
+    expression exec('su bamos -c "/home/bamos/.cabal/bin/snowglobe-analysis --events /home/bamos/repos/snowglobe/data/events.tsv DaySummary"',10000)
     width 20
     align 'R'
     prefix 'web'
