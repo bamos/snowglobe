@@ -73,7 +73,9 @@ More information on setting these reports up below.
 1. Install wget, Python, sbt, scala, and the JRE (&ge; 1.7).
 2. If the default Java distribution is not version 1.7 or above,
    set `JAVA_HOME` in `scripts/env.sh`.
-2. Run `./scripts/bootstrap.sh` to download Snowplow and GeoLite binaries.
+3. Run `./scripts/bootstrap.sh` to download Snowplow and GeoLite binaries.
+4. Update the `uri` in [ip_lookups.json](conf/enrichments/ip_lookups.json`)
+   to use the absolute path to your repository.
 
 # Collecting and storing events to TSV files
 On the server, start the collector and enricher with the following
