@@ -32,7 +32,7 @@ dayReport tz now events = formatReport report
                     ("Referrers", dayReferrers),
                     ("Visitors", intercalate "\n\n" visitorInfo)]
           dayReferrers = sortedEventInfo prettyReferrerStr $ map head visitors
-          prettyReferrerStr = (fromMaybe "") . prettyReferrer
+          prettyReferrerStr = fromMaybe "" . prettyReferrer
           dayPages = sortedEventInfo pageUrl todaysEvents
           visitorInfo = map getVisitorInfo sortedVisitors
           sortedVisitors = sortBy (flip compare `on` length) visitors
