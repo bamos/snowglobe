@@ -1,16 +1,16 @@
 #!/bin/bash
 
 set -x -e # Output commands being executed and propogate errors.
-cd $(dirname $0)/.. # cd into the snowglobe
+cd $(dirname $0)/.. # cd into the snowglobe directory
 
 ./scripts/bootstrap.sh
 #./scripts/start-collect-enrich.sh &
 stdbuf -i0 -o0 -e0 \
-  ../vendor/snowplow-stream-collector-0.4.0 --config ../conf/collector.conf \
-  | ../vendor/snowplow-kinesis-enrich-0.5.0 \
-    --config ../conf/enrich.conf \
-    --resolver file:../conf/resolver.json \
-    --enrichments file:../conf/enrichments &
+  ./vendor/snowplow-stream-collector-0.4.0 --config ./conf/collector.conf \
+  | ./vendor/snowplow-kinesis-enrich-0.5.0 \
+    --config ./conf/enrich.conf \
+    --resolver file:./conf/resolver.json \
+    --enrichments file:./conf/enrichments &
 CE_PID=$!
 
 sleep 1 # Be sure the collector and enricher are initialized.
