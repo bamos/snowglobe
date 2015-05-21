@@ -4,6 +4,12 @@ set -x -e # Output commands being executed and propogate errors.
 cd $(dirname $0)/.. # cd into the snowglobe directory
 
 ./scripts/bootstrap.sh
+
+sed "s|home/bamos/repos/snowglobe|$PWD|g" \
+    conf/enrichments/ip_lookups.json \
+    > conf/enrichments/ip_lookups.new.json
+mv conf/enrichments/ip_lookups{.new,}.json
+
 #./scripts/start-collect-enrich.sh &
 stdbuf -i0 -o0 -e0 \
   ./vendor/snowplow-stream-collector-0.4.0 --config ./conf/collector.conf \
