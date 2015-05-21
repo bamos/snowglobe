@@ -13,7 +13,7 @@ stdbuf -i0 -o0 -e0 \
     --enrichments file:./conf/enrichments &
 CE_PID=$!
 
-sleep 1 # Be sure the collector and enricher are initialized.
+sleep 10 # Be sure the collector and enricher are initialized.
 ./sample/send-view.rb # Send a single page view.
 
 SG=./dist/build/snowglobe-analysis/snowglobe-analysis
