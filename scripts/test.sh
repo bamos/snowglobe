@@ -5,9 +5,14 @@ cd $(dirname $0)/.. # cd into the snowglobe
 
 ./scripts/bootstrap.sh
 ./scripts/start-collect-enrich.sh &
-sleep 1
-./dist/build/snowglobe-analysis/snowglobe-analysis \
-  --events data/events.tsv \
-  DayReport
+CE_PID=$!
 
-# TODO: Kill collecter and enricher subprocess
+sleep 1 # Be sure the collector and enricher are initialized.
+./sample/send-view.rb # Send a single page view.
+
+SG=./dist/build/snowglobe-analysis/snowglobe-analysis
+for MODE in {DaySummary,DayReport,WeekReport}; do
+  $SG --events data/events.tsv $MODE
+done
+
+kill $CE_PID
