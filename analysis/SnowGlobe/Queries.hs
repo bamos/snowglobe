@@ -103,7 +103,10 @@ sortedEventInfo:: (EnrichedEvent->String) -> [EnrichedEvent] -> String
 sortedEventInfo field events =
     intercalate "\n" $ map fieldStr sortedGroupedFields
     where
-      fieldStr f = concat ["  [", show $ length f, " hits]: ", head f]
+      fieldStr f = concat [ "  ["
+                          , show $ length f
+                          , if length f == 1 then " hit]: " else " hits]: "
+                          , head f ]
       sortedGroupedFields = sortBy (flip compare `on` length) .
                             group .
                             sort $
