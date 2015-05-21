@@ -41,12 +41,15 @@ prettyReferrer:: EnrichedEvent -> Maybe String
 prettyReferrer e =
     case (pageReferrer e, refrMedium e, refrSource e, refrTerm e) of
       ("", _, _, _) -> Nothing
-      (url, "search", "", term) -> Just $ url ++ " [TODO: prettyReferrer: \
-                                                 \empty refrSource?]"
-      (url, "search", source, "") -> Just $ source ++ " [Secure Search]"
-      (url, "search", source, term) -> Just $ concat [source, " Search - ", term]
-      (url, med, source, term) -> Just $ "TODO: prettyReferrer: " ++
-                                    intercalate " - " [url, med, source, term]
+      (url, "search", "", term) ->
+          Just $ url ++ " [TODO: prettyReferrer: empty refrSource?]"
+      (url, "search", source, "") -> Just $ source ++ ": [Secure Search]"
+      (url, "search", source, term) -> Just $ concat [source, ": ", show term]
+      (url, "social", source, term) -> Just $ concat [source, ": (TODO) ", url]
+      (url, "unknown", _, _) -> Just url
+      (url, med, source, term) ->
+          Just $ "TODO: prettyReferrer: " ++
+               intercalate " - " [url, med, source, term]
 
 data EnrichedEvent = EnrichedEvent {
     -- The application (site,game,app etc) this event belongs to,and
