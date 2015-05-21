@@ -10,22 +10,20 @@ sed "s|home/bamos/repos/snowglobe|$PWD|g" \
     > conf/enrichments/ip_lookups.new.json
 mv conf/enrichments/ip_lookups{.new,}.json
 
-#./scripts/start-collect-enrich.sh &
-mkdir -p data
-stdbuf -i0 -o0 -e0 \
-  ./vendor/snowplow-stream-collector-0.4.0 --config ./conf/collector.conf \
-  | ./vendor/snowplow-kinesis-enrich-0.5.0 \
-    --config ./conf/enrich.conf \
-    --resolver file:./conf/resolver.json \
-    --enrichments file:./conf/enrichments > data/events.tsv &
+./scripts/start-collect-enrich.sh &
 CE_PID=$!
 
-sleep 60 # Be sure the collector and enricher are initialized.
-./sample/send-view.rb # Send a single page view.
+# Be sure the collector and enricher are initialized.
+# On real servers, initialization happens in subsecond time.
+# Travis' servers need a longer delay due to compute/memory limitations.
+sleep 60
 
-SG=./dist/build/snowglobe-analysis/snowglobe-analysis
-for MODE in {DaySummary,DayReport,WeekReport}; do
-  $SG --events data/events.tsv $MODE
-done
+# Send a single page view.
+./sample/send-view.rb
 
 kill $CE_PID
+
+SG=./dist/build/snowglobe-analysis/snowglobe-analysis
+$SG --events data/events.tsv DaySummary
+$SG --events data/events.tsv DayReport
+$SG --events data/events.tsv WeekReport
