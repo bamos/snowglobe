@@ -3,7 +3,7 @@ ghc: 7.8
 before_install:
   - sudo apt-get update -qq
   - sudo apt-get install hlint libgeoip-dev ruby1.9.1 rubygems1.9.1
-  - sudo gem install snowplow-tracker
+  - gem install snowplow-tracker
 script:
   - cabal build
   - hlint .
