@@ -60,23 +60,28 @@ eventStats events = intercalate "\n"
 getVisitorInfo:: [EnrichedEvent] -> String
 getVisitorInfo all@(e1:rest) =
     concat $ ["## ", userIpaddress e1, "\n",
-            "+ Number of Visits: ", numVisits, "\n",
-            "+ OS: ", osName e1, "\n",
+              "+ Number of Visits: ", numVisits, "\n",
+              "+ OS: ", osName e1, "\n",
+              "+ Location: ", locationInfo (geoCity e1) (geoRegionName e1)
+                                (geoCountry e1),
+              "\n",
+              "+ Organization: ", getOrganization $ userIpaddress e1, "\n",
+              "+ Timezone: ", osTimezone e1, "\n"] ++
+    referrerInfo ++ ["+ Pages (Entry first):\n", pagePath]
+    where
+      pagePath = intercalate "\n" $ map (\e -> "  + " ++ pageUrl e) all
+      numVisits = show . length $ all
 
-            -- Assume the user's location is the same for all of their events.
-            "+ Location: ",
-            geoCity e1, ", ", geoRegionName e1, ", ", geoCountry e1, "\n",
+      -- Assume the user's location is the same for all of their events.
+      locationInfo "" "" "" = "Not found"
+      locationInfo "" "" country = country
+      locationInfo "" region country = intercalate ", " [region, country]
+      locationInfo city region country = intercalate ", " [city, region, country]
 
-            "+ Organization: ", getOrganization $ userIpaddress e1, "\n",
-            "+ Timezone: ", osTimezone e1, "\n"] ++
-            referrerInfo ++
-            ["+ Pages (Entry first):\n", pagePath]
-    where pagePath = intercalate "\n" $ map (\e -> "  + " ++ pageUrl e) all
-          numVisits = show . length $ all
-          referrerInfo =
-              case prettyReferrer e1 of
-                Nothing -> []
-                Just referrer -> ["+ Referrer: ", referrer, "\n"]
+      referrerInfo =
+          case prettyReferrer e1 of
+            Nothing -> []
+            Just referrer -> ["+ Referrer: ", referrer, "\n"]
 
 -- Reports are represented as a list of (heading, section) tuples.
 -- Format them in a Markdown-esque style by marking headings with '#'.
