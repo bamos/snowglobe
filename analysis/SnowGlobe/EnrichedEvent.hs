@@ -38,17 +38,17 @@ getOrganization ipAddr =
           failureMsg = "Not found"
 
 prettyReferrer:: EnrichedEvent -> Maybe String
-prettyReferrer e =
-    case (pageReferrer e, refrMedium e, refrSource e, refrTerm e) of
-      ("", _, _, _) -> Nothing
-      (url, "search", "", term) ->
-          Just $ url ++ " [TODO: prettyReferrer: empty refrSource?]"
-      (url, "search", source, "") -> Just $ source ++ ": [Secure Search]"
-      (url, "search", source, term) -> Just $ concat [source, ": ", show term]
-      (url, "social", source, term) -> Just $ concat [source, ": (TODO) ", url]
-      (url, "unknown", _, _) -> Just url
-      (url, med, source, term) ->
-          Just $ "TODO: prettyReferrer: " ++
+prettyReferrer e
+    | pageReferrer e == "" = Nothing
+    | otherwise = pure $ f (pageReferrer e) (refrMedium e)
+                           (refrSource e) (refrTerm e)
+    where
+      f url "search" source "" = source ++ ": [Secure Search]"
+      f url "search" source term = concat [source, ": ", show term]
+      f url "social" source "" = concat [source, ": ", url]
+      f url "social" source term = concat [source, ": (TODO) ", url, ":", term]
+      f url "unknown" _ _ = url
+      f url med source term = "TODO: prettyReferrer: " ++
                intercalate " - " [url, med, source, term]
 
 data EnrichedEvent = EnrichedEvent {
