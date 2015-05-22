@@ -40,7 +40,7 @@ getOrganization ipAddr =
 prettyReferrer:: EnrichedEvent -> Maybe String
 prettyReferrer e
     | pageReferrer e == "" = Nothing
-    | otherwise = pure $ f (pageReferrer e) (refrMedium e)
+    | otherwise = Just $ f (pageReferrer e) (refrMedium e)
                            (refrSource e) (refrTerm e)
     where
       f url "search" source "" = source ++ ": [Secure Search]"
