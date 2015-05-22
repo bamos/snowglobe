@@ -23,6 +23,9 @@ sleep 60
 
 kill $CE_PID
 
+# Make sure the events file is flushed to disk.
+sleep 5
+
 SG=./dist/build/snowglobe-analysis/snowglobe-analysis
 $SG --events data/events.tsv DaySummary
 $SG --events data/events.tsv DayReport
