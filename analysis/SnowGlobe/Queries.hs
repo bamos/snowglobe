@@ -65,7 +65,7 @@ getVisitorInfo all@(e1:rest) =
               "+ Location: ", locationInfo (geoCity e1) (geoRegionName e1)
                                 (geoCountry e1),
               "\n",
-              "+ Organization: ", getOrganization $ userIpaddress e1, "\n",
+              -- "+ Organization: ", getOrganization $ userIpaddress e1, "\n",
               "+ Timezone: ", osTimezone e1, "\n"] ++
     referrerInfo ++ ["+ Pages (Entry first):\n", pagePath]
     where
