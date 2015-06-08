@@ -48,6 +48,7 @@ prettyReferrer e
       f url "social" source "" = concat [source, ": ", url]
       f url "social" source term = concat [source, ": (TODO) ", url, ":", term]
       f url "unknown" _ _ = url
+      f url "internal" _ _ = url
       f url med source term = "TODO: prettyReferrer: " ++
                intercalate " - " [url, med, source, term]
 
