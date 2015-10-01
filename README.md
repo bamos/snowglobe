@@ -32,6 +32,10 @@ My ongoing goals in building SnowGlobe are to:
    the information I want.
 3. Create interesting real-time visualizations (not started)
 
+# Why not use SQL to query the data?
+You should.
+I'm using this project to learn Haskell.
+
 ## Progress
 ### Real-time summary on an LCD display
 Somebody in my research group gave me a small LCD display
