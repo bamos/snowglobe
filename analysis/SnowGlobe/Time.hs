@@ -3,7 +3,7 @@
 -- Brandon Amos <http://bamos.github.io>
 -- 2015.05.08
 
-module SnowGlobe.Time(parse, getTodaysEvents, getWeeksEvents) where
+module SnowGlobe.Time(parse, getDaysEvents, getWeeksEvents) where
 
 import Control.Applicative
 import Data.Time(Day, LocalTime(..), TimeZone, defaultTimeLocale,
@@ -25,8 +25,8 @@ isNDaysAgo tz now n e =
         where diff = diffDays (localDay now) eTime
     where eTimeM = localDay <$> parse tz (collectorTstamp e) :: Maybe Day
 
-getTodaysEvents:: TimeZone -> LocalTime -> [EnrichedEvent] -> [EnrichedEvent]
-getTodaysEvents tz now = filter $ isNDaysAgo tz now 0
+getDaysEvents:: TimeZone -> LocalTime -> [EnrichedEvent] -> [EnrichedEvent]
+getDaysEvents tz now = filter $ isNDaysAgo tz now 0
 
 getNDaysAgoDate:: LocalTime -> Integer -> String
 getNDaysAgoDate now n = show $ addDays (-n) $ localDay now

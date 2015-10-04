@@ -12,42 +12,42 @@ import Data.Time(LocalTime, TimeZone)
 
 import SnowGlobe.EnrichedEvent(EnrichedEvent(..), getOrganization,
                                prettyReferrer)
-import SnowGlobe.Time(parse, getTodaysEvents, getWeeksEvents)
+import SnowGlobe.Time(parse, getDaysEvents, getWeeksEvents)
 
--- Summarize today's events so far with the number of total
+-- Summarize a day's events so far with the number of total
 -- events and visitors.
 -- I use this to pipe a summary to my external LCD display,
 -- but a concise summary is also useful on desktop-based status bars.
 daySummary:: TimeZone -> LocalTime -> [EnrichedEvent] -> String
-daySummary tz now events = numEvents ++ " | " ++ numVisitors
-    where numEvents = (show . length) todaysEvents
-          numVisitors = (show . length . groupByVisitors) todaysEvents
-          todaysEvents = getTodaysEvents tz now events
+daySummary tz queryDay events = numEvents ++ " | " ++ numVisitors
+    where numEvents = (show . length) daysEvents
+          numVisitors = (show . length . groupByVisitors) daysEvents
+          daysEvents = getDaysEvents tz queryDay events
 
--- Report today's statistics, pages, and visitors.
+-- Report a day's statistics, pages, and visitors.
 dayReport:: TimeZone -> LocalTime -> [EnrichedEvent] -> String
-dayReport tz now events = formatReport report
-    where report = [("Statistics", eventStats todaysEvents),
+dayReport tz queryDay events = formatReport report
+    where report = [("Statistics", eventStats daysEvents),
                     ("Pages", dayPages),
                     ("Referrers", dayReferrers),
                     ("Visitors", intercalate "\n\n" visitorInfo)]
           dayReferrers = sortedEventInfo prettyReferrerStr $ map head visitors
           prettyReferrerStr = fromMaybe "" . prettyReferrer
-          dayPages = sortedEventInfo pageUrl todaysEvents
+          dayPages = sortedEventInfo pageUrl daysEvents
           visitorInfo = map getVisitorInfo sortedVisitors
           sortedVisitors = sortBy (flip compare `on` length) visitors
-          visitors = groupByVisitors todaysEvents
-          todaysEvents = getTodaysEvents tz now events
+          visitors = groupByVisitors daysEvents
+          daysEvents = getDaysEvents tz queryDay events
 
--- Summarize today's statistics, pages, and visitors.
+-- Summarize a week's statistics, pages, and visitors.
 weekReport:: TimeZone -> LocalTime -> [EnrichedEvent] -> String
-weekReport tz now events = formatReport report
+weekReport tz queryDay events = formatReport report
     where report = ("Total", eventStats eventsFlat) :
                    zip dayTitles dayBreakdown
           dayTitles = map fst eventsGrouped
           dayBreakdown = map (eventStats . snd) eventsGrouped
           eventsFlat = concatMap snd eventsGrouped
-          eventsGrouped = getWeeksEvents tz now events
+          eventsGrouped = getWeeksEvents tz queryDay events
 
 -- High-level statistics about a list of events.
 eventStats:: [EnrichedEvent] -> String
