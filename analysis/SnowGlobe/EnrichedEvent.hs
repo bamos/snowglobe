@@ -53,8 +53,7 @@ prettyReferrer e
                intercalate " - " [url, med, source, term]
 
 data EnrichedEvent = EnrichedEvent {
-    -- The application (site,game,app etc) this event belongs to,and
-    -- the tracker platform
+    -- The application this event belongs to and the tracker platform
      appId:: String
     ,platform:: String
 
