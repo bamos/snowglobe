@@ -18,6 +18,7 @@ module SnowGlobe.EnrichedEvent(EnrichedEvent(..), getOrganization,
                                prettyReferrer) where
 
 import Data.Csv
+import Control.Exception(catch, IOException)
 import Data.Function(on)
 import Data.List(groupBy,intercalate,sortBy)
 import GHC.Generics
@@ -34,7 +35,10 @@ getOrganization ipAddr =
       (Just whoisStr,_) ->
           if null r then failureMsg else head r !! 1
           where r = whoisStr =~ "Organization: *(.*)" :: [[String]]
-    where m = unsafeDupablePerformIO . whois $ ipAddr
+    where m = unsafeDupablePerformIO
+              (catch
+               (whois ipAddr)
+               (\(_:: IOException) -> return (Nothing, Nothing)))
           failureMsg = "Not found"
 
 prettyReferrer:: EnrichedEvent -> Maybe String
