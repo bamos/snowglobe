@@ -78,7 +78,7 @@ run args = do
         where events = filter isMine $ V.toList eventsV
               isMine e = any (\domain -> isInfixOf domain $ pageUrl e) whitelist
               whitelist = ["bamos.github.io", "derecho.elijah"]
-              queryDay = if (day args) == "today" then now else parsedTime
+              queryDay = if day args == "today" then now else parsedTime
 
 main :: IO ()
 main = execParser opts >>= run
