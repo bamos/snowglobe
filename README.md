@@ -241,24 +241,6 @@ The following `cron` entry calls
 59 23 * * * /home/bamos/repos/snowglobe/scripts/analytics-daily-report.sh
 59 23 * * 0 /home/bamos/repos/snowglobe/scripts/analytics-weekly-report.sh
 ```
-
-## Unimplemented Ideas
-Please comment on the issues or contact
-[Brandon Amos](http://bamos.github.io)
-if you're interested in helping.
-
-+ ([#5](https://github.com/bamos/snowglobe/issues/5))
-  Visualizations
-+ ([#6](https://github.com/bamos/snowglobe/issues/6))
-  More streaming analytics, possibly visualizations,
-  since `events.tsv` updates in real-time.
-+ ([#7](https://github.com/bamos/snowglobe/issues/7))
-  Finish weekly, monthly, and yearly reports.
-+ ([#8](https://github.com/bamos/snowglobe/issues/8))
-  Intelligently parse referrers so they're easier to glance at.
-+ ([#9](https://github.com/bamos/snowglobe/issues/9))
-  Add optional arguments to the modes to retrieve historical analytics.
-
 # Licensing
 SnowGlobe portions copyright 2014-2015 Brandon Amos under the
 Apache License.
