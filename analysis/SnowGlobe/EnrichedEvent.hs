@@ -36,7 +36,7 @@ getOrganization ipAddr =
           if null r then failureMsg else head r !! 1
           where r = whoisStr =~ "Organization: *(.*)" :: [[String]]
     where m = unsafeDupablePerformIO
-              (catch
+              (Control.Exception.catch
                (whois ipAddr)
                (\(_:: IOException) -> return (Nothing, Nothing)))
           failureMsg = "Not found"
