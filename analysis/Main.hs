@@ -77,7 +77,10 @@ run args = do
           WeekReport -> putStrLn $ weekReport tz queryDay events
         where events = filter isMine $ V.toList eventsV
               isMine e = any (\domain -> isInfixOf domain $ pageUrl e) whitelist
-              whitelist = ["bamos.github.io", "derecho.elijah"]
+              whitelist = [ "bamos.github.io"
+                          , "derecho.elijah"
+                          , "cmusatyalab.github.io/openface"
+                          ]
               queryDay = if day args == "today" then now else parsedTime
 
 main :: IO ()
