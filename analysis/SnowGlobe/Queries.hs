@@ -30,12 +30,15 @@ dayReport tz queryDay events = formatReport report
     where report = [("Statistics", eventStats daysEvents),
                     ("Pages", dayPages),
                     ("Referrers", dayReferrers),
-                    ("Visitors", intercalate "\n\n" visitorInfo)]
+                    ("Organizations", organizations)]
+                    -- ("Visitors", intercalate "\n\n" visitorInfo)]
           dayReferrers = sortedEventInfo prettyReferrerStr $ map head visitors
           prettyReferrerStr = fromMaybe "" . prettyReferrer
           dayPages = sortedEventInfo pageUrl daysEvents
-          visitorInfo = map getVisitorInfo sortedVisitors
-          sortedVisitors = sortBy (flip compare `on` length) visitors
+          organizations = sortedEventInfo prettyOrgStr $ map head visitors
+          prettyOrgStr = getOrganization . userIpaddress
+          -- visitorInfo = map getVisitorInfo sortedVisitors
+          -- sortedVisitors = sortBy (flip compare `on` length) visitors
           visitors = groupByVisitors daysEvents
           daysEvents = getDaysEvents tz queryDay events
 
