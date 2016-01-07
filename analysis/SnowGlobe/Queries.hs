@@ -30,15 +30,22 @@ dayReport tz queryDay events = formatReport report
     where report = [("Statistics", eventStats daysEvents),
                     ("Pages", dayPages),
                     ("Referrers", dayReferrers),
-                    ("Organizations", organizations)]
+                    ("Organizations", organizations),
+                    ("Locations", locations)]
                     -- ("Visitors", intercalate "\n\n" visitorInfo)]
-          dayReferrers = sortedEventInfo prettyReferrerStr $ map head visitors
-          prettyReferrerStr = fromMaybe "" . prettyReferrer
+          dayReferrers = sortedEventInfo referrerStr $ map head visitors
+          referrerStr = fromMaybe "" . prettyReferrer
           dayPages = sortedEventInfo pageUrl daysEvents
-          organizations = sortedEventInfo prettyOrgStr $ map head visitors
-          prettyOrgStr = getOrganization . userIpaddress
+
+          organizations = sortedEventInfo orgStr $ map head visitors
+          orgStr = getOrganization . userIpaddress
+
+          locations = sortedEventInfo locationStr $ map head visitors
+          locationStr e = locationInfo (geoCity e) (geoRegionName e) (geoCountry e)
+
           -- visitorInfo = map getVisitorInfo sortedVisitors
           -- sortedVisitors = sortBy (flip compare `on` length) visitors
+
           visitors = groupByVisitors daysEvents
           daysEvents = getDaysEvents tz queryDay events
 
@@ -59,6 +66,12 @@ eventStats events = intercalate "\n"
                      "+ " ++ (show . length) events ++ " total events."]
     where visitors = groupByVisitors events
 
+locationInfo:: String -> String -> String -> String
+locationInfo "" "" "" = "Not found"
+locationInfo "" "" country = country
+locationInfo "" region country = intercalate ", " [region, country]
+locationInfo city region country = intercalate ", " [city, region, country]
+
 -- Detailed view of a visitor's interactions.
 getVisitorInfo:: [EnrichedEvent] -> String
 getVisitorInfo all@(e1:rest) =
@@ -74,12 +87,6 @@ getVisitorInfo all@(e1:rest) =
     where
       pagePath = intercalate "\n" $ map (\e -> "  + " ++ pageUrl e) all
       numVisits = show . length $ all
-
-      -- Assume the user's location is the same for all of their events.
-      locationInfo "" "" "" = "Not found"
-      locationInfo "" "" country = country
-      locationInfo "" region country = intercalate ", " [region, country]
-      locationInfo city region country = intercalate ", " [city, region, country]
 
       referrerInfo =
           case prettyReferrer e1 of
