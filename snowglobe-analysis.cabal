@@ -22,7 +22,7 @@ executable snowglobe-analysis
                       SnowGlobe.Time,
                       SnowGlobe.Queries
   -- other-extensions:
-  build-depends:       base >=4.7 && <5,
+  build-depends:       base >=4.6 && <5,
                        bytestring == 0.10.*,
                        cassava == 0.4.*,
                        optparse-applicative == 0.11.*,
