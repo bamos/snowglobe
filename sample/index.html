@@ -9,7 +9,7 @@
       // Use localhost as the server for testing on the same computer,
       // but change to your deployed server IP address or hostname
       // for production.
-      var snowplowTracker = Snowplow.getTrackerUrl('localhost:8080');
+      var snowplowTracker = Snowplow.getTrackerUrl('localhost:8081');
       snowplowTracker.enableLinkTracking();
       snowplowTracker.trackPageView();
     } catch (err) {}

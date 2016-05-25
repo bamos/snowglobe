@@ -81,7 +81,7 @@ or a detached screen or tmux session.
 + `conf/collector.conf` and `conf/enrich.conf` contain sensible default
    configurations for Snowplow's collector and enricher.
 + `scripts/start-collect-enrich.sh` will start Snowplow's collector on port
-  8080 to pipe Base 64 serialized Thrift raw event output to Snowplow's
+  8081 to pipe Base 64 serialized Thrift raw event output to Snowplow's
   Scala enricher.
   The enricher will output [Snowplow enriched events][enriched-events]
   as rows in `data/events.tsv`, which will use ~720 bytes per event.
@@ -106,7 +106,7 @@ Next, copy and paste the following code to your webpage's
 templates to send events on the pages you wish to track,
 and add Snowplow's JavaScript library `sp.js` to your website's
 resource directory.
-Make sure to change `localhost:8080` to your server and port,
+Make sure to change `localhost:8081` to your server and port,
 and ensure the port is open.
 
 ```JavaScript
@@ -116,7 +116,7 @@ try {
   // Use localhost as the server for testing on the same computer,
   // but change to your deployed server IP address or hostname
   // for production.
-  var snowplowTracker = Snowplow.getTrackerUrl('localhost:8080');
+  var snowplowTracker = Snowplow.getTrackerUrl('localhost:8081');
   snowplowTracker.enableLinkTracking();
   snowplowTracker.trackPageView();
 } catch (err) {}
